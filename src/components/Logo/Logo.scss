@@ -28,4 +28,12 @@
     width: t.$icon-size-medium;
     height: t.$icon-size-medium;
   }
+
+  &--inverse {
+    color: t.$color-white;
+  }
+
+  &--inverse &__mark {
+    background-color: t.$color-tertiary;
+  }
 }
