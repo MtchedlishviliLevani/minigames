@@ -1,0 +1,29 @@
+@use 'tokens' as t;
+@use 'breakpoints' as bp;
+
+.container {
+  width: 100%;
+  max-width: t.$container-max-width;
+  margin-inline: auto;
+  padding-inline: t.$container-padding-mobile;
+
+  @include bp.tablet {
+    padding-inline: t.$container-padding-tablet;
+  }
+
+  @include bp.desktop {
+    padding-inline: t.$container-padding-desktop;
+  }
+}
+
+.section {
+  padding-block: t.$size-2;
+
+  @include bp.tablet {
+    padding-block: t.$size-3;
+  }
+
+  @include bp.desktop {
+    padding-block: t.$size-5;
+  }
+}

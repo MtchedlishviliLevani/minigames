@@ -1,0 +1,51 @@
+@use 'sass:map';
+$breakpoints: (
+  mobile-max: 767px,
+  tablet-min: 768px,
+  tablet-max: 1023px,
+  desktop-min: 1024px,
+);
+
+@mixin mobile {
+  @media (max-width: map.get($breakpoints, mobile-max)) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: map.get($breakpoints, tablet-min)) and (max-width: map.get($breakpoints, tablet-max)) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: map.get($breakpoints, tablet-min)) {
+    @content;
+  }
+}
+
+@mixin below-desktop {
+  @media (max-width: map.get($breakpoints, tablet-max)) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: map.get($breakpoints, desktop-min)) {
+    @content;
+  }
+}
+
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

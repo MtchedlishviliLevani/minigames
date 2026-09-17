@@ -1,0 +1,76 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  font-family: t.$font-family-base;
+  font-size: t.$font-size-body-medium;
+  line-height: t.$line-height-base;
+  color: t.$color-on-bg;
+  background-color: t.$color-bg;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+dialog {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: t.$border-width-thick solid t.$color-tertiary;
+  outline-offset: t.$border-width-thick;
+}
+
+.visually-hidden {
+  @include m.visually-hidden;
+}
