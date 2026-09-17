@@ -29,6 +29,15 @@ $color-price-free: #0b8a8f;
 $color-outline: #e5e7eb;
 $color-outline-variant: #d2d2d2;
 
+$color-overlay: rgba(36, 33, 69, 0.55);
+// Figma game-card overlay: black, 0% -> 40% at 17% -> 85% from 46% down.
+$color-card-scrim: linear-gradient(
+  180deg,
+  rgba(0, 0, 0, 0) 0%,
+  rgba(0, 0, 0, 0.4) 17%,
+  rgba(0, 0, 0, 0.85) 46%
+);
+
 // Typography
 $font-family-base:
   'Inter',
@@ -115,6 +124,32 @@ $header-height-desktop: 85px;
 $icon-size-small: 16px;
 $icon-size-medium: 24px;
 $icon-size-large: 32px;
+
+// Controls
+$control-size: 48px;
+$control-size-small: 40px;
+
+// Hero
+$hero-height-mobile: 331px;
+$hero-height-tablet: 383px;
+$hero-height-desktop: 627px;
+$hero-card-max-width: 640px;
+
+// Game cards
+$card-height-mobile: 200px;
+$card-height-tablet: 280px;
+$card-height-desktop: 384px;
+$card-peek-width-mobile: 56px;
+$card-peek-width-tablet: 105px;
+$card-peek-width-desktop: 120px;
+$card-regular-width: 288px;
+$card-featured-width-mobile: 218px;
+$card-featured-width-tablet: 448px;
+$card-featured-width-desktop: 816px;
+// Regular cards drop their info overlay when a narrow desktop squeezes them below this.
+$card-info-min-width: 200px;
+$card-track-padding-mobile: $size-05;
+$card-track-padding: $size-1;
 
 // Motion
 $duration-fast: 150ms;

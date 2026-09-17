@@ -63,4 +63,45 @@
       background-color: t.$color-surface;
     }
   }
+
+  &--inverse {
+    border-color: t.$color-white;
+    color: t.$color-white;
+    background-color: transparent;
+
+    @include bp.hover {
+      background-color: t.$color-primary;
+      border-color: t.$color-primary;
+      color: t.$color-on-primary;
+    }
+  }
+
+  &--block {
+    width: 100%;
+  }
+
+  &--round {
+    width: t.$control-size;
+    height: t.$control-size;
+    padding: 0;
+    border-radius: t.$corner-full;
+    background-color: transparent;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+
+    &.btn--filled {
+      background-color: t.$color-primary;
+
+      @include bp.hover {
+        background-color: t.$color-primary-high;
+      }
+    }
+
+    @include bp.below-desktop {
+      width: t.$control-size-small;
+      height: t.$control-size-small;
+    }
+  }
 }

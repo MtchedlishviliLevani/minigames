@@ -27,3 +27,23 @@
     padding-block: t.$size-5;
   }
 }
+
+.section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: t.$size-2;
+  margin-bottom: t.$size-2;
+
+  @include bp.tablet {
+    margin-bottom: t.$size-3;
+  }
+
+  @include bp.desktop {
+    margin-bottom: t.$size-5;
+  }
+}
+
+body.is-locked {
+  overflow: hidden;
+}

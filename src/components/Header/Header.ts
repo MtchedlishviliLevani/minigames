@@ -3,6 +3,16 @@ import { NAV_LINKS } from '../../data/navigation';
 import { el } from '../../utils/dom';
 import { Icon } from '../Icon/Icon';
 import { Logo } from '../Logo/Logo';
+import { toggleMenu } from '../MobileMenu/MobileMenu';
+
+let burger: HTMLButtonElement | null = null;
+
+export function setBurgerOpen(isOpen: boolean): void {
+  if (!burger) return;
+  burger.classList.toggle('is-open', isOpen);
+  burger.setAttribute('aria-expanded', String(isOpen));
+  burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+}
 
 const NavLink = (label: string, href: string, isActive: boolean): HTMLLIElement => {
   const link = el('a', {
@@ -22,11 +32,12 @@ const AuthButton = (label: string, variant: string): HTMLButtonElement =>
   });
 
 const Burger = (): HTMLButtonElement => {
-  const burger = el('button', {
+  burger = el('button', {
     className: 'btn btn--icon header__burger',
     attrs: {
       type: 'button',
       'aria-label': 'Open menu',
+      'aria-controls': 'mobile-menu',
       'aria-expanded': 'false',
     },
     children: [
@@ -34,11 +45,7 @@ const Burger = (): HTMLButtonElement => {
       Icon('close', 'header__burger-icon header__burger-icon--close'),
     ],
   });
-  burger.addEventListener('click', () => {
-    const isOpen = burger.classList.toggle('is-open');
-    burger.setAttribute('aria-expanded', String(isOpen));
-    burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
-  });
+  burger.addEventListener('click', toggleMenu);
   return burger;
 };
 
