@@ -1,0 +1,124 @@
+// Colors
+$color-white: #ffffff;
+$color-black: #000000;
+
+$color-bg: #f9f8f3;
+$color-on-bg: #5f5d75;
+$color-on-bg-low: #737380;
+
+$color-bg-footer: #1e1b3a;
+$color-bg-footer-low: #2a264f;
+$color-bg-footer-lowest: #3c378e;
+$color-on-bg-footer: #b9b5c9;
+
+$color-surface: #fff9e5;
+$color-surface-low: #fffcf5;
+
+$color-primary: #ffd02b;
+$color-primary-low: #fde047;
+$color-primary-high: #e5bb00;
+$color-on-primary: #242145;
+
+$color-secondary: #f0eeff;
+$color-tertiary: #3a2ebf;
+
+$color-like: #ff4b4b;
+$color-error: #b3261e;
+$color-price-free: #0b8a8f;
+
+$color-outline: #e5e7eb;
+$color-outline-variant: #d2d2d2;
+
+// Typography
+$font-family-base:
+  'Inter',
+  'Roboto',
+  system-ui,
+  -apple-system,
+  sans-serif;
+
+$font-size-display-large: 56px;
+$font-size-display-medium: 36px;
+$font-size-display-small: 24px;
+$font-size-headline-large: 32px;
+$font-size-headline-medium: 24px;
+$font-size-headline-small: 20px;
+$font-size-body-large: 18px;
+$font-size-body-medium: 16px;
+$font-size-body-small: 14px;
+$font-size-label-extra-large: 16px;
+$font-size-label-large: 14px;
+$font-size-label-medium: 12px;
+$font-size-label-small: 10px;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+$font-weight-extra-bold: 800;
+
+$line-height-tight: 1.15;
+$line-height-snug: 1.3;
+$line-height-base: 1.5;
+
+// Sizes (8px scale)
+$size-05: 4px;
+$size-1: 8px;
+$size-2: 16px;
+$size-3: 24px;
+$size-4: 32px;
+$size-5: 40px;
+$size-6: 48px;
+$size-7: 56px;
+$size-8: 64px;
+$size-9: 72px;
+$size-10: 80px;
+$size-11: 88px;
+$size-12: 96px;
+$size-13: 104px;
+$size-14: 112px;
+$size-15: 120px;
+
+// Corners
+$corner-extra-small: 4px;
+$corner-small: 8px;
+$corner-medium: 12px;
+$corner-large: 16px;
+$corner-extra-large: 24px;
+$corner-full: 9999px;
+
+// Buttons
+$btn-large-padding: 16px 24px;
+$btn-medium-padding: 10px 20px;
+$btn-small-padding: 8px 16px;
+$btn-icon-padding: 8px;
+
+// Shadows
+$shadow-level-1: 4px 4px 0 $color-on-primary;
+$shadow-level-2: 6px 6px 0 $color-on-primary;
+$shadow-level-3: 8px 8px 0 $color-on-primary;
+
+// Borders
+$border-width: 1px;
+$border-width-thick: 2px;
+
+// Layout
+$container-max-width: 1920px;
+$container-padding-mobile: $size-2;
+$container-padding-tablet: $size-5;
+$container-padding-desktop: $size-15;
+
+// Motion
+$duration-fast: 150ms;
+$duration-base: 250ms;
+$duration-slow: 400ms;
+$easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+$easing-out: cubic-bezier(0, 0, 0.2, 1);
+
+// Z-index
+$z-header: 100;
+$z-menu: 950;
+$z-dialog: 1000;
+
+// Misc
+$opacity-disabled: 0.5;
+$size-visually-hidden: 1px;
