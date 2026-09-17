@@ -1,0 +1,158 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+@use '../../styles/mixins' as m;
+
+.carousel {
+  &__controls {
+    display: none;
+    gap: t.$size-2;
+
+    // Figma: mobile header has no arrows; tablet and desktop do.
+    @include bp.tablet-up {
+      display: flex;
+    }
+  }
+
+  // Figma "Previous" arrow sits on a white disc (the outlined button is transparent by default).
+  &__control.btn--outlined {
+    background-color: t.$color-white;
+  }
+
+  &__track {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: t.$size-1;
+    // Bottom padding leaves room for the card's offset shadow inside the clipped track.
+    padding: 0 t.$card-track-padding-mobile t.$size-05;
+    overflow: hidden;
+
+    @include bp.tablet-up {
+      padding-inline: t.$card-track-padding;
+    }
+  }
+
+  &__error {
+    color: t.$color-error;
+    font-size: t.$font-size-body-medium;
+  }
+
+  // Track slots per Figma. Widths are exact at 375 / 768 / 1920; in between, the
+  // featured card (and on desktop the regulars) absorb the difference.
+  &__item {
+    height: t.$card-height-mobile;
+
+    @include bp.tablet {
+      height: t.$card-height-tablet;
+    }
+
+    @include bp.desktop {
+      height: t.$card-height-desktop;
+    }
+
+    &--peek {
+      flex: 0 0 t.$card-peek-width-desktop;
+
+      @include bp.below-desktop {
+        display: none;
+      }
+    }
+
+    &--regular {
+      flex: 0 0 t.$card-peek-width-mobile;
+
+      @include bp.tablet {
+        flex-basis: t.$card-peek-width-tablet;
+      }
+
+      @include bp.desktop {
+        flex: 0 1 t.$card-regular-width;
+        min-width: 0;
+        container-type: inline-size;
+      }
+    }
+
+    &--featured {
+      flex: 1 1 0;
+      min-width: 0;
+
+      @include bp.desktop {
+        flex-basis: t.$card-featured-width-desktop;
+      }
+    }
+
+    // Peeks never show the overlay; regulars become peeks below desktop.
+    &--peek .game-card__info {
+      display: none;
+    }
+
+    &--regular .game-card__info {
+      @include bp.below-desktop {
+        display: none;
+      }
+
+      @container (max-width: #{t.$card-info-min-width - 1px}) {
+        display: none;
+      }
+    }
+  }
+}
+
+.game-card {
+  @include m.card;
+
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+
+  @include bp.desktop {
+    border-radius: t.$corner-extra-large;
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__info {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-1;
+    padding: t.$size-2;
+    background: t.$color-card-scrim;
+    color: t.$color-white;
+  }
+
+  &__title {
+    @include m.truncate;
+
+    font-size: t.$font-size-body-large;
+    color: inherit;
+  }
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: t.$font-size-label-extra-large;
+    font-weight: t.$font-weight-bold;
+  }
+
+  &__stat {
+    display: inline-flex;
+    align-items: center;
+    gap: t.$size-05;
+  }
+
+  &__star {
+    color: t.$color-primary;
+  }
+
+  &__heart {
+    color: t.$color-like;
+  }
+}
