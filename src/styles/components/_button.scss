@@ -1,0 +1,66 @@
+@use '../tokens' as t;
+@use '../breakpoints' as bp;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: t.$size-1;
+  padding: t.$btn-medium-padding;
+  border: t.$border-width-thick solid t.$color-on-primary;
+  border-radius: t.$corner-small;
+  font-size: t.$font-size-label-large;
+  font-weight: t.$font-weight-bold;
+  line-height: t.$line-height-snug;
+  color: t.$color-on-primary;
+  white-space: nowrap;
+  transition:
+    background-color t.$duration-fast t.$easing-standard,
+    color t.$duration-fast t.$easing-standard,
+    border-color t.$duration-fast t.$easing-standard;
+
+  &:active {
+    background-color: t.$color-primary-high;
+  }
+
+  &:disabled {
+    opacity: t.$opacity-disabled;
+    cursor: not-allowed;
+  }
+
+  &--outlined {
+    background-color: transparent;
+
+    @include bp.hover {
+      background-color: t.$color-primary;
+    }
+  }
+
+  &--filled {
+    background-color: t.$color-primary;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+  }
+
+  &--large {
+    padding: t.$btn-large-padding;
+    font-size: t.$font-size-label-extra-large;
+  }
+
+  &--small {
+    padding: t.$btn-small-padding;
+    font-size: t.$font-size-label-medium;
+  }
+
+  &--icon {
+    padding: t.$btn-icon-padding;
+    border-radius: t.$corner-small;
+    background-color: transparent;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+  }
+}

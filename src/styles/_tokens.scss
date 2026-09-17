@@ -107,6 +107,15 @@ $container-padding-mobile: $size-2;
 $container-padding-tablet: $size-5;
 $container-padding-desktop: $size-15;
 
+$header-height-mobile: 64px;
+$header-height-tablet: 72px;
+$header-height-desktop: 85px;
+
+// Icons
+$icon-size-small: 16px;
+$icon-size-medium: 24px;
+$icon-size-large: 32px;
+
 // Motion
 $duration-fast: 150ms;
 $duration-base: 250ms;
