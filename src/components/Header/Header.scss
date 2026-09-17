@@ -1,0 +1,131 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: t.$z-header;
+  background-color: t.$color-bg;
+  border-bottom: t.$border-width solid t.$color-outline;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: t.$size-2;
+    height: t.$header-height-mobile;
+
+    @include bp.tablet {
+      height: t.$header-height-tablet;
+    }
+
+    @include bp.desktop {
+      height: t.$header-height-desktop;
+      gap: t.$size-4;
+    }
+  }
+
+  &__nav {
+    display: none;
+
+    @include bp.desktop {
+      display: block;
+      margin-left: auto;
+    }
+  }
+
+  &__links {
+    display: flex;
+    gap: t.$size-5;
+  }
+
+  &__link {
+    display: block;
+    padding-block: t.$size-1;
+    font-size: t.$font-size-label-extra-large;
+    font-weight: t.$font-weight-medium;
+    color: t.$color-on-bg;
+    border-bottom: t.$border-width-thick solid transparent;
+    transition:
+      color t.$duration-fast t.$easing-standard,
+      border-color t.$duration-fast t.$easing-standard;
+
+    @include bp.hover {
+      color: t.$color-on-primary;
+      border-color: t.$color-primary;
+    }
+
+    &--active {
+      font-weight: t.$font-weight-bold;
+      color: t.$color-on-primary;
+    }
+  }
+
+  &__actions {
+    display: none;
+    gap: t.$size-2;
+
+    @include bp.tablet-up {
+      display: flex;
+    }
+  }
+
+  // Tablet shows only "Sign Up" next to the burger (Guidebook: tablet nav bar).
+  &__login {
+    @include bp.tablet {
+      display: none;
+    }
+  }
+
+  &__burger {
+    position: relative;
+    width: t.$icon-size-large;
+    height: t.$icon-size-large;
+    padding: 0;
+    border: t.$border-width-thick solid t.$color-on-primary;
+    border-radius: t.$corner-small;
+    color: t.$color-on-primary;
+    transition:
+      background-color t.$duration-base t.$easing-standard,
+      color t.$duration-base t.$easing-standard;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+
+    &.is-open {
+      background-color: t.$color-on-primary;
+      color: t.$color-white;
+    }
+
+    @include bp.desktop {
+      display: none;
+    }
+  }
+
+  &__burger-icon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: t.$icon-size-small;
+    height: t.$icon-size-small;
+    transition:
+      opacity t.$duration-base t.$easing-standard,
+      transform t.$duration-base t.$easing-standard;
+
+    &--close {
+      opacity: 0;
+      transform: rotate(-90deg);
+    }
+  }
+
+  &__burger.is-open &__burger-icon--open {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  &__burger.is-open &__burger-icon--close {
+    opacity: 1;
+    transform: rotate(0);
+  }
+}

@@ -1,11 +1,7 @@
+import { Header } from './components/Header/Header';
 import { el } from './utils/dom';
 
 export function mountApp(root: HTMLElement): void {
-  const header = el('header', {
-    className: 'header',
-    children: [el('div', { className: 'container', text: 'MiniGames' })],
-  });
-
   const main = el('main', {
     className: 'main',
     attrs: { id: 'main' },
@@ -17,5 +13,5 @@ export function mountApp(root: HTMLElement): void {
     children: [el('div', { className: 'container', text: 'MiniGames' })],
   });
 
-  root.replaceChildren(header, main, footer);
+  root.replaceChildren(Header(), main, footer);
 }
