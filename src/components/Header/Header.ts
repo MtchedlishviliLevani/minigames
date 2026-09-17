@@ -1,6 +1,8 @@
 import './Header.scss';
 import { NAV_LINKS } from '../../data/navigation';
+import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
+import { openAuthDialog } from '../AuthDialog/AuthDialog';
 import { Icon } from '../Icon/Icon';
 import { Logo } from '../Logo/Logo';
 import { toggleMenu } from '../MobileMenu/MobileMenu';
@@ -24,12 +26,17 @@ const NavLink = (label: string, href: string, isActive: boolean): HTMLLIElement 
   return el('li', { children: [link] });
 };
 
-const AuthButton = (label: string, variant: string): HTMLButtonElement =>
-  el('button', {
+const AuthButton = (mode: AuthMode, label: string, variant: string): HTMLButtonElement => {
+  const button = el('button', {
     className: `btn ${variant}`,
     attrs: { type: 'button' },
     text: label,
   });
+  button.addEventListener('click', () => {
+    openAuthDialog(mode);
+  });
+  return button;
+};
 
 const Burger = (): HTMLButtonElement => {
   burger = el('button', {
@@ -64,8 +71,8 @@ export const Header = (): HTMLElement => {
   const actions = el('div', {
     className: 'header__actions',
     children: [
-      AuthButton('Log In', 'btn--outlined header__login'),
-      AuthButton('Sign Up', 'btn--filled header__signup'),
+      AuthButton('login', 'Log In', 'btn--outlined header__login'),
+      AuthButton('register', 'Sign Up', 'btn--filled header__signup'),
     ],
   });
 
