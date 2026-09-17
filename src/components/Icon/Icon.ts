@@ -6,6 +6,7 @@ import heart from '../../assets/icons/heart.svg?raw';
 import menu from '../../assets/icons/menu.svg?raw';
 import puzzle from '../../assets/icons/puzzle.svg?raw';
 import star from '../../assets/icons/star.svg?raw';
+import upload from '../../assets/icons/upload.svg?raw';
 
 const ICONS = {
   menu,
@@ -13,6 +14,7 @@ const ICONS = {
   puzzle,
   star,
   heart,
+  upload,
   'arrow-back': arrowBack,
   'arrow-forward': arrowForward,
 };

@@ -1,4 +1,4 @@
-import type { Game, MockResponse } from '../types';
+import type { Game, LeaderboardEntry, MockResponse } from '../types';
 
 const MOCK_API_BASE = `${import.meta.env.BASE_URL}mock`;
 
@@ -19,6 +19,11 @@ export async function getGames(): Promise<Game[]> {
 export async function getFeaturedGames(): Promise<Game[]> {
   const games = await getGames();
   return games.filter((game) => game.featured);
+}
+
+export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
+  const { data } = await fetchJson<MockResponse<LeaderboardEntry>>('leaderboard');
+  return data;
 }
 
 export function assetUrl(path: string): string {

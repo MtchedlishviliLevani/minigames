@@ -1,3 +1,5 @@
+@use 'sass:list';
+
 // Colors
 $color-white: #ffffff;
 $color-black: #000000;
@@ -28,6 +30,11 @@ $color-price-free: #0b8a8f;
 
 $color-outline: #e5e7eb;
 $color-outline-variant: #d2d2d2;
+
+$color-avatar-2: #a3e2c9;
+$color-avatar-3: #bce3ff;
+$color-avatar-4: #ffc8ff;
+$color-avatar-5: #e8dff5;
 
 $color-overlay: rgba(36, 33, 69, 0.55);
 // Figma game-card overlay: black, 0% -> 40% at 17% -> 85% from 46% down.
@@ -150,6 +157,22 @@ $card-featured-width-desktop: 816px;
 $card-info-min-width: 200px;
 $card-track-padding-mobile: $size-05;
 $card-track-padding: $size-1;
+
+// Leaderboard
+$table-header-height-mobile: 48px;
+$table-header-height-desktop: 67px;
+$table-row-height-mobile: 56px;
+$table-row-height-tablet: 60px;
+$table-row-height-desktop: 72px;
+$avatar-size: 40px;
+$avatar-size-small: 28px;
+
+// Developer section
+$illustration-max-width: 682px;
+$illustration-aspect-ratio: list.slash(682, 483);
+$illustration-height-mobile: 227px;
+$illustration-height-tablet: 300px;
+$cta-card-max-width: 958px;
 
 // Motion
 $duration-fast: 150ms;
