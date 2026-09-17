@@ -174,6 +174,16 @@ $illustration-height-mobile: 227px;
 $illustration-height-tablet: 300px;
 $cta-card-max-width: 958px;
 
+// Footer
+$footer-brand-width: 400px;
+$footer-links-width: 511px;
+
+// Auth dialog
+$dialog-width: 420px;
+$dialog-width-mobile: calc(100vw - #{$size-4});
+$input-height: 48px;
+$scale-dialog-start: 0.94;
+
 // Motion
 $duration-fast: 150ms;
 $duration-base: 250ms;
