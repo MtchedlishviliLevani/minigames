@@ -3,6 +3,19 @@ export interface NavLink {
   href: string;
 }
 
+export interface FooterLinkGroup {
+  title: string;
+  links: NavLink[];
+}
+
+export type SocialIcon = 'share' | 'chat' | 'rss';
+
+export interface SocialLink extends NavLink {
+  icon: SocialIcon;
+}
+
+export type AuthMode = 'login' | 'register';
+
 export interface Game {
   slug: string;
   name: string;

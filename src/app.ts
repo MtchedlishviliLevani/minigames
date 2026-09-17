@@ -1,5 +1,7 @@
+import { AuthDialog } from './components/AuthDialog/AuthDialog';
 import { Carousel } from './components/Carousel/Carousel';
 import { DevCta } from './components/DevCta/DevCta';
+import { Footer } from './components/Footer/Footer';
 import { Header } from './components/Header/Header';
 import { Hero } from './components/Hero/Hero';
 import { Leaderboard } from './components/Leaderboard/Leaderboard';
@@ -13,10 +15,5 @@ export function mountApp(root: HTMLElement): void {
     children: [Hero(), Carousel(), Leaderboard(), DevCta()],
   });
 
-  const footer = el('footer', {
-    className: 'footer',
-    children: [el('div', { className: 'container', text: 'MiniGames' })],
-  });
-
-  root.replaceChildren(Header(), main, footer, MobileMenu());
+  root.replaceChildren(Header(), main, Footer(), MobileMenu(), AuthDialog());
 }

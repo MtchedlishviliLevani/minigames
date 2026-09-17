@@ -1,6 +1,8 @@
 import './MobileMenu.scss';
 import { NAV_LINKS } from '../../data/navigation';
+import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
+import { openAuthDialog } from '../AuthDialog/AuthDialog';
 import { setBurgerOpen } from '../Header/Header';
 import { Icon } from '../Icon/Icon';
 import { Logo } from '../Logo/Logo';
@@ -16,7 +18,6 @@ export function openMenu(): void {
   isOpen = true;
   lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   menu.hidden = false;
-  // Next frame so the slide-in transition starts from the hidden state.
   requestAnimationFrame(() => {
     menu?.classList.add('is-open');
     menu?.querySelector<HTMLElement>('.mobile-menu__close')?.focus();
@@ -61,13 +62,16 @@ const MenuLink = (label: string, href: string, isActive: boolean): HTMLLIElement
   return el('li', { children: [link] });
 };
 
-const AuthButton = (label: string, variant: string): HTMLButtonElement => {
+const AuthButton = (mode: AuthMode, label: string, variant: string): HTMLButtonElement => {
   const button = el('button', {
     className: `btn btn--block ${variant}`,
     attrs: { type: 'button' },
     text: label,
   });
-  button.addEventListener('click', closeMenu);
+  button.addEventListener('click', () => {
+    closeMenu();
+    openAuthDialog(mode);
+  });
   return button;
 };
 
@@ -96,7 +100,10 @@ export const MobileMenu = (): HTMLElement => {
       }),
       el('div', {
         className: 'mobile-menu__actions',
-        children: [AuthButton('Log In', 'btn--inverse'), AuthButton('Sign Up', 'btn--filled')],
+        children: [
+          AuthButton('login', 'Log In', 'btn--inverse'),
+          AuthButton('register', 'Sign Up', 'btn--filled'),
+        ],
       }),
     ],
   });
