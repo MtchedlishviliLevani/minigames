@@ -1,5 +1,3 @@
-@use 'sass:list';
-
 // Colors
 $color-white: #ffffff;
 $color-black: #000000;
@@ -168,11 +166,10 @@ $avatar-size: 40px;
 $avatar-size-small: 28px;
 
 // Developer section
-$illustration-max-width: 682px;
-$illustration-aspect-ratio: list.slash(682, 483);
 $illustration-height-mobile: 227px;
 $illustration-height-tablet: 300px;
-$cta-card-max-width: 958px;
+// Figma desktop: 682px illustration next to a 958px card; kept as a ratio so it scales.
+$cta-grid-columns: minmax(0, 682fr) minmax(0, 958fr);
 
 // Footer
 $footer-brand-width: 400px;
