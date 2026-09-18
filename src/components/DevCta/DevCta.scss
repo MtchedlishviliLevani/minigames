@@ -12,8 +12,8 @@
     }
 
     @include bp.desktop {
-      grid-template-columns: minmax(0, t.$illustration-max-width) minmax(0, t.$cta-card-max-width);
-      align-items: center;
+      grid-template-columns: t.$cta-grid-columns;
+      align-items: stretch;
       gap: t.$size-5;
     }
   }
@@ -29,8 +29,7 @@
     }
 
     @include bp.desktop {
-      height: auto;
-      aspect-ratio: t.$illustration-aspect-ratio;
+      height: 100%;
     }
   }
 
@@ -48,6 +47,11 @@
     }
 
     @include bp.desktop {
+      justify-content: center;
+    }
+
+    @include bp.desktop-large {
+      align-self: center;
       gap: t.$size-3;
       padding: t.$size-5;
     }
@@ -62,7 +66,7 @@
       display: none;
     }
 
-    @include bp.desktop {
+    @include bp.desktop-large {
       font-size: t.$font-size-headline-large;
     }
   }
@@ -71,11 +75,11 @@
     font-size: t.$font-size-body-small;
     line-height: t.$line-height-base;
 
-    @include bp.tablet {
+    @include bp.tablet-up {
       font-size: t.$font-size-body-medium;
     }
 
-    @include bp.desktop {
+    @include bp.desktop-large {
       font-size: t.$font-size-body-large;
     }
   }

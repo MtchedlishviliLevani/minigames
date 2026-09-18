@@ -3,30 +3,42 @@
 @use '../../styles/mixins' as m;
 
 .leaderboard {
-  &__title-full,
-  &__text-full {
+  &__title-full {
     display: none;
 
-    @include bp.desktop {
+    @include bp.tablet-up {
       display: inline;
     }
   }
 
-  &__title-short,
-  &__text-short {
-    @include bp.desktop {
+  &__title-short {
+    @include bp.tablet-up {
       display: none;
     }
   }
 
-  @include bp.tablet {
-    &__title-full,
-    &__cell--totalScore &__text-full {
+  &__text-full {
+    display: none;
+
+    @include bp.desktop-large {
       display: inline;
     }
+  }
 
-    &__title-short,
-    &__cell--totalScore &__text-short {
+  &__text-short {
+    @include bp.desktop-large {
+      display: none;
+    }
+  }
+
+  &__cell--totalScore &__text-full {
+    @include bp.tablet-up {
+      display: inline;
+    }
+  }
+
+  &__cell--totalScore &__text-short {
+    @include bp.tablet-up {
       display: none;
     }
   }
@@ -34,7 +46,8 @@
   &__wrapper {
     @include m.card;
 
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
   &__table {
@@ -67,6 +80,10 @@
 
     @include bp.desktop {
       height: t.$table-header-height-desktop;
+      padding-inline: t.$size-2;
+    }
+
+    @include bp.desktop-large {
       padding-inline: t.$size-3;
     }
 

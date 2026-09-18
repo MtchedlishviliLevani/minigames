@@ -7,13 +7,11 @@
     display: none;
     gap: t.$size-2;
 
-    // Figma: mobile header has no arrows; tablet and desktop do.
     @include bp.tablet-up {
       display: flex;
     }
   }
 
-  // Figma "Previous" arrow sits on a white disc (the outlined button is transparent by default).
   &__control.btn--outlined {
     background-color: t.$color-white;
   }
@@ -23,7 +21,6 @@
     justify-content: space-between;
     align-items: flex-start;
     gap: t.$size-1;
-    // Bottom padding leaves room for the card's offset shadow inside the clipped track.
     padding: 0 t.$card-track-padding-mobile t.$size-05;
     overflow: hidden;
 
@@ -37,8 +34,6 @@
     font-size: t.$font-size-body-medium;
   }
 
-  // Track slots per Figma. Widths are exact at 375 / 768 / 1920; in between, the
-  // featured card (and on desktop the regulars) absorb the difference.
   &__item {
     height: t.$card-height-mobile;
 
@@ -51,10 +46,11 @@
     }
 
     &--peek {
+      display: none;
       flex: 0 0 t.$card-peek-width-desktop;
 
-      @include bp.below-desktop {
-        display: none;
+      @include bp.desktop-large {
+        display: block;
       }
     }
 
@@ -70,6 +66,10 @@
         min-width: 0;
         container-type: inline-size;
       }
+
+      @include bp.desktop-large {
+        min-width: t.$card-info-min-width;
+      }
     }
 
     &--featured {
@@ -81,7 +81,6 @@
       }
     }
 
-    // Peeks never show the overlay; regulars become peeks below desktop.
     &--peek .game-card__info {
       display: none;
     }

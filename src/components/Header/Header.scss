@@ -6,7 +6,7 @@
   top: 0;
   z-index: t.$z-header;
   background-color: t.$color-bg;
-  border-bottom: t.$border-width solid t.$color-outline;
+  border-bottom: t.$border-width-thick solid t.$color-on-primary;
 
   &__inner {
     display: flex;
@@ -22,6 +22,7 @@
     @include bp.desktop {
       height: t.$header-height-desktop;
       gap: t.$size-4;
+      padding-inline: t.$size-10;
     }
   }
 
@@ -67,6 +68,15 @@
 
     @include bp.tablet-up {
       display: flex;
+    }
+
+    @include bp.tablet {
+      margin-left: auto;
+    }
+
+    .btn {
+      padding: t.$btn-small-padding;
+      font-size: t.$font-size-label-medium;
     }
   }
 
