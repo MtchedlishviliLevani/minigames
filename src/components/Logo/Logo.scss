@@ -19,9 +19,10 @@
     justify-content: center;
     width: t.$icon-size-large;
     height: t.$icon-size-large;
+    border: t.$border-width-thick solid t.$color-on-primary;
     border-radius: t.$corner-small;
-    background-color: t.$color-on-primary;
-    color: t.$color-white;
+    background-color: t.$color-white;
+    color: t.$color-on-primary;
   }
 
   &__mark .icon {
@@ -34,6 +35,8 @@
   }
 
   &--inverse &__mark {
+    border-color: t.$color-white;
     background-color: t.$color-tertiary;
+    color: t.$color-white;
   }
 }
