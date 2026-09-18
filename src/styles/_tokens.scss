@@ -1,0 +1,198 @@
+// Colors
+$color-white: #ffffff;
+$color-black: #000000;
+
+$color-bg: #f9f8f3;
+$color-on-bg: #5f5d75;
+$color-on-bg-low: #737380;
+
+$color-bg-footer: #1e1b3a;
+$color-bg-footer-low: #2a264f;
+$color-bg-footer-lowest: #3c378e;
+$color-on-bg-footer: #b9b5c9;
+
+$color-surface: #fff9e5;
+$color-surface-low: #fffcf5;
+
+$color-primary: #ffd02b;
+$color-primary-low: #fde047;
+$color-primary-high: #e5bb00;
+$color-on-primary: #242145;
+
+$color-secondary: #f0eeff;
+$color-tertiary: #3a2ebf;
+
+$color-like: #ff4b4b;
+$color-error: #b3261e;
+$color-price-free: #0b8a8f;
+
+$color-outline: #e5e7eb;
+$color-outline-variant: #d2d2d2;
+
+$color-avatar-2: #a3e2c9;
+$color-avatar-3: #bce3ff;
+$color-avatar-4: #ffc8ff;
+$color-avatar-5: #e8dff5;
+
+$color-overlay: rgba(36, 33, 69, 0.55);
+// Figma game-card overlay: black, 0% -> 40% at 17% -> 85% from 46% down.
+$color-card-scrim: linear-gradient(
+  180deg,
+  rgba(0, 0, 0, 0) 0%,
+  rgba(0, 0, 0, 0.4) 17%,
+  rgba(0, 0, 0, 0.85) 46%
+);
+
+// Typography
+$font-family-base:
+  'Inter',
+  'Roboto',
+  system-ui,
+  -apple-system,
+  sans-serif;
+
+$font-size-display-large: 56px;
+$font-size-display-medium: 36px;
+$font-size-display-small: 24px;
+$font-size-headline-large: 32px;
+$font-size-headline-medium: 24px;
+$font-size-headline-small: 20px;
+$font-size-body-large: 18px;
+$font-size-body-medium: 16px;
+$font-size-body-small: 14px;
+$font-size-label-extra-large: 16px;
+$font-size-label-large: 14px;
+$font-size-label-medium: 12px;
+$font-size-label-small: 10px;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+$font-weight-extra-bold: 800;
+
+$line-height-tight: 1.15;
+$line-height-snug: 1.3;
+$line-height-base: 1.5;
+
+// Sizes (8px scale)
+$size-05: 4px;
+$size-1: 8px;
+$size-2: 16px;
+$size-3: 24px;
+$size-4: 32px;
+$size-5: 40px;
+$size-6: 48px;
+$size-7: 56px;
+$size-8: 64px;
+$size-9: 72px;
+$size-10: 80px;
+$size-11: 88px;
+$size-12: 96px;
+$size-13: 104px;
+$size-14: 112px;
+$size-15: 120px;
+
+// Corners
+$corner-extra-small: 4px;
+$corner-small: 8px;
+$corner-medium: 12px;
+$corner-large: 16px;
+$corner-extra-large: 24px;
+$corner-full: 9999px;
+
+// Buttons
+$btn-large-padding: 16px 24px;
+$btn-medium-padding: 10px 20px;
+$btn-small-padding: 8px 16px;
+$btn-icon-padding: 8px;
+
+// Shadows
+$shadow-level-1: 4px 4px 0 $color-on-primary;
+$shadow-level-2: 6px 6px 0 $color-on-primary;
+$shadow-level-3: 8px 8px 0 $color-on-primary;
+
+// Borders
+$border-width: 1px;
+$border-width-thick: 2px;
+
+// Layout
+$container-max-width: 1920px;
+$container-padding-mobile: $size-2;
+$container-padding-tablet: $size-5;
+$container-padding-desktop: $size-15;
+
+$header-height-mobile: 64px;
+$header-height-tablet: 72px;
+$header-height-desktop: 85px;
+
+// Icons
+$icon-size-small: 16px;
+$icon-size-medium: 24px;
+$icon-size-large: 32px;
+
+// Controls
+$control-size: 48px;
+$control-size-small: 40px;
+
+// Hero
+$hero-height-mobile: 331px;
+$hero-height-tablet: 383px;
+$hero-height-desktop: 627px;
+$hero-card-max-width: 640px;
+
+// Game cards
+$card-height-mobile: 200px;
+$card-height-tablet: 280px;
+$card-height-desktop: 384px;
+$card-peek-width-mobile: 56px;
+$card-peek-width-tablet: 105px;
+$card-peek-width-desktop: 120px;
+$card-regular-width: 288px;
+$card-featured-width-mobile: 218px;
+$card-featured-width-tablet: 448px;
+$card-featured-width-desktop: 816px;
+// Regular cards drop their info overlay when a narrow desktop squeezes them below this.
+$card-info-min-width: 200px;
+$card-track-padding-mobile: $size-05;
+$card-track-padding: $size-1;
+
+// Leaderboard
+$table-header-height-mobile: 48px;
+$table-header-height-desktop: 67px;
+$table-row-height-mobile: 56px;
+$table-row-height-tablet: 60px;
+$table-row-height-desktop: 72px;
+$avatar-size: 40px;
+$avatar-size-small: 28px;
+
+// Developer section
+$illustration-height-mobile: 227px;
+$illustration-height-tablet: 300px;
+// Figma desktop: 682px illustration next to a 958px card; kept as a ratio so it scales.
+$cta-grid-columns: minmax(0, 682fr) minmax(0, 958fr);
+
+// Footer
+$footer-brand-width: 400px;
+$footer-links-width: 511px;
+
+// Auth dialog
+$dialog-width: 420px;
+$dialog-width-mobile: calc(100vw - #{$size-4});
+$input-height: 48px;
+$scale-dialog-start: 0.94;
+
+// Motion
+$duration-fast: 150ms;
+$duration-base: 250ms;
+$duration-slow: 400ms;
+$easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+$easing-out: cubic-bezier(0, 0, 0.2, 1);
+
+// Z-index
+$z-header: 100;
+$z-menu: 950;
+$z-dialog: 1000;
+
+// Misc
+$opacity-disabled: 0.5;
+$size-visually-hidden: 1px;

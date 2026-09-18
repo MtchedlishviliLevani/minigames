@@ -1,0 +1,76 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+@use '../../styles/mixins' as m;
+
+.hero {
+  display: flex;
+  align-items: center;
+  height: t.$hero-height-mobile;
+  background-image: linear-gradient(t.$color-overlay, t.$color-overlay), var(--hero-image);
+  background-size: cover;
+  background-position: center;
+
+  @include bp.tablet {
+    height: t.$hero-height-tablet;
+  }
+
+  @include bp.desktop {
+    height: t.$hero-height-desktop;
+  }
+
+  &__card {
+    @include m.card(t.$corner-large, t.$shadow-level-2);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: t.$size-2;
+    max-width: t.$hero-card-max-width;
+    padding: t.$size-3;
+    background-color: t.$color-surface-low;
+
+    @include bp.tablet {
+      padding: t.$size-4;
+    }
+
+    @include bp.desktop {
+      gap: t.$size-3;
+      padding: t.$size-6;
+    }
+  }
+
+  &__title {
+    font-size: t.$font-size-headline-medium;
+    line-height: t.$line-height-tight;
+
+    @include bp.tablet {
+      font-size: t.$font-size-display-medium;
+    }
+
+    @include bp.desktop {
+      font-size: t.$font-size-display-large;
+    }
+  }
+
+  &__description {
+    font-size: t.$font-size-body-small;
+    line-height: t.$line-height-base;
+    color: t.$color-on-bg;
+
+    @include bp.desktop {
+      font-size: t.$font-size-body-medium;
+    }
+  }
+
+  &__button {
+    @include bp.mobile {
+      padding: t.$btn-small-padding;
+      font-size: t.$font-size-label-medium;
+    }
+
+    @include bp.desktop {
+      padding: t.$btn-large-padding;
+      font-size: t.$font-size-label-extra-large;
+    }
+  }
+}

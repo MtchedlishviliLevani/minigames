@@ -1,0 +1,42 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: t.$size-1;
+  font-size: t.$font-size-headline-small;
+  font-weight: t.$font-weight-bold;
+  color: t.$color-on-primary;
+
+  @include bp.desktop {
+    font-size: t.$font-size-headline-medium;
+  }
+
+  &__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: t.$icon-size-large;
+    height: t.$icon-size-large;
+    border: t.$border-width-thick solid t.$color-on-primary;
+    border-radius: t.$corner-small;
+    background-color: t.$color-white;
+    color: t.$color-on-primary;
+  }
+
+  &__mark .icon {
+    width: t.$icon-size-medium;
+    height: t.$icon-size-medium;
+  }
+
+  &--inverse {
+    color: t.$color-white;
+  }
+
+  &--inverse &__mark {
+    border-color: t.$color-white;
+    background-color: t.$color-tertiary;
+    color: t.$color-white;
+  }
+}

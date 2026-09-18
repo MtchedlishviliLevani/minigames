@@ -1,0 +1,40 @@
+@use 'tokens' as t;
+
+@mixin card($radius: t.$corner-large, $shadow: t.$shadow-level-1) {
+  border: t.$border-width-thick solid t.$color-on-primary;
+  border-radius: $radius;
+  background-color: t.$color-white;
+  box-shadow: $shadow;
+}
+
+@mixin section-title {
+  display: flex;
+  align-items: center;
+  gap: t.$size-1;
+  font-weight: t.$font-weight-bold;
+  color: t.$color-on-primary;
+
+  &::before {
+    content: '';
+    display: block;
+    width: t.$size-05;
+    height: 1em;
+    border-radius: t.$corner-full;
+    background-color: t.$color-primary;
+  }
+}
+
+@mixin truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: t.$size-visually-hidden;
+  height: t.$size-visually-hidden;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

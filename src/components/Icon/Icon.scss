@@ -1,0 +1,23 @@
+@use '../../styles/tokens' as t;
+
+.icon {
+  display: inline-block;
+  width: t.$icon-size-medium;
+  height: t.$icon-size-medium;
+  flex-shrink: 0;
+
+  &--small {
+    width: t.$icon-size-small;
+    height: t.$icon-size-small;
+  }
+
+  &--large {
+    width: t.$icon-size-medium;
+    height: t.$icon-size-large;
+  }
+
+  &--medium {
+    width: t.$icon-size-medium;
+    height: t.$icon-size-medium;
+  }
+}

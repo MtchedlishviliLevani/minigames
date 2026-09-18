@@ -1,0 +1,85 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: t.$z-menu;
+  display: flex;
+  flex-direction: column;
+  padding: t.$size-3;
+  background-color: t.$color-bg-footer;
+  color: t.$color-white;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform t.$duration-base t.$easing-out;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &.is-open {
+    transform: translateX(0);
+  }
+
+  @include bp.reduced-motion {
+    transition-duration: 0s;
+  }
+
+  @include bp.desktop {
+    display: none;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: t.$size-4;
+  }
+
+  &__close {
+    width: t.$icon-size-large;
+    height: t.$icon-size-large;
+    padding: 0;
+    border: t.$border-width-thick solid t.$color-white;
+    color: t.$color-white;
+
+    @include bp.hover {
+      background-color: t.$color-bg-footer-lowest;
+    }
+  }
+
+  &__nav {
+    flex: 1;
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-3;
+  }
+
+  &__link {
+    display: block;
+    font-size: t.$font-size-body-large;
+    font-weight: t.$font-weight-medium;
+    color: t.$color-on-bg-footer;
+    transition: color t.$duration-fast t.$easing-standard;
+
+    @include bp.hover {
+      color: t.$color-primary;
+    }
+
+    &--active {
+      font-weight: t.$font-weight-bold;
+      color: t.$color-primary;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-2;
+    margin-top: t.$size-4;
+  }
+}

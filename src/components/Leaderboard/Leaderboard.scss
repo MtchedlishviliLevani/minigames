@@ -1,0 +1,197 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+@use '../../styles/mixins' as m;
+
+.leaderboard {
+  &__title-full {
+    display: none;
+
+    @include bp.tablet-up {
+      display: inline;
+    }
+  }
+
+  &__title-short {
+    @include bp.tablet-up {
+      display: none;
+    }
+  }
+
+  &__text-full {
+    display: none;
+
+    @include bp.desktop-large {
+      display: inline;
+    }
+  }
+
+  &__text-short {
+    @include bp.desktop-large {
+      display: none;
+    }
+  }
+
+  &__cell--totalScore &__text-full {
+    @include bp.tablet-up {
+      display: inline;
+    }
+  }
+
+  &__cell--totalScore &__text-short {
+    @include bp.tablet-up {
+      display: none;
+    }
+  }
+
+  &__wrapper {
+    @include m.card;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  &__table {
+    font-size: t.$font-size-label-medium;
+    font-weight: t.$font-weight-bold;
+    color: t.$color-on-primary;
+    text-align: center;
+
+    @include bp.desktop {
+      font-size: t.$font-size-label-large;
+    }
+  }
+
+  &__head {
+    background-color: t.$color-tertiary;
+    color: t.$color-white;
+    text-transform: uppercase;
+    font-size: t.$font-size-label-small;
+
+    @include bp.desktop {
+      font-size: t.$font-size-label-large;
+    }
+  }
+
+  &__cell {
+    height: t.$table-header-height-mobile;
+    padding-inline: t.$size-1;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    @include bp.desktop {
+      height: t.$table-header-height-desktop;
+      padding-inline: t.$size-2;
+    }
+
+    @include bp.desktop-large {
+      padding-inline: t.$size-3;
+    }
+
+    &--player {
+      text-align: left;
+    }
+
+    &--first {
+      color: t.$color-primary-high;
+    }
+
+    &--from-tablet {
+      display: none;
+
+      @include bp.tablet-up {
+        display: table-cell;
+      }
+    }
+
+    &--from-desktop {
+      display: none;
+
+      @include bp.desktop {
+        display: table-cell;
+      }
+    }
+  }
+
+  &__error {
+    padding: t.$size-2;
+    color: t.$color-error;
+    text-align: center;
+  }
+
+  &__row {
+    border-top: t.$border-width solid t.$color-outline;
+
+    &:nth-child(odd) {
+      background-color: t.$color-surface-low;
+    }
+
+    .leaderboard__cell {
+      height: t.$table-row-height-mobile;
+
+      @include bp.tablet {
+        height: t.$table-row-height-tablet;
+      }
+
+      @include bp.desktop {
+        height: t.$table-row-height-desktop;
+      }
+    }
+  }
+
+  &__player {
+    display: inline-flex;
+    align-items: center;
+    gap: t.$size-1;
+  }
+
+  &__avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: t.$avatar-size-small;
+    height: t.$avatar-size-small;
+    border: t.$border-width solid t.$color-on-primary;
+    border-radius: t.$corner-full;
+    font-size: t.$font-size-label-small;
+    font-weight: t.$font-weight-bold;
+
+    @include bp.desktop {
+      width: t.$avatar-size;
+      height: t.$avatar-size;
+      font-size: t.$font-size-label-medium;
+    }
+
+    &--1 {
+      background-color: t.$color-primary;
+    }
+
+    &--2 {
+      background-color: t.$color-avatar-2;
+    }
+
+    &--3 {
+      background-color: t.$color-avatar-3;
+    }
+
+    &--4 {
+      background-color: t.$color-avatar-4;
+    }
+
+    &--5 {
+      background-color: t.$color-avatar-5;
+    }
+  }
+
+  &__flame {
+    margin-right: t.$size-05;
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: t.$size-05 t.$size-1;
+    border: t.$border-width solid t.$color-on-primary;
+    border-radius: t.$corner-full;
+    font-size: t.$font-size-label-medium;
+    font-weight: t.$font-weight-medium;
+  }
+}

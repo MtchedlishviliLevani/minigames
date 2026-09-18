@@ -1,0 +1,219 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+@use '../../styles/mixins' as m;
+
+.auth-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: t.$z-dialog;
+  display: none;
+  width: 100%;
+  max-width: 100vw;
+  height: 100%;
+  max-height: 100vh;
+  padding: t.$size-2;
+  overflow-y: auto;
+
+  &[open] {
+    display: flex;
+  }
+
+  &::backdrop {
+    background-color: t.$color-overlay;
+    opacity: 0;
+    transition: opacity t.$duration-base t.$easing-standard;
+  }
+
+  &.is-open::backdrop {
+    opacity: 1;
+  }
+
+  // 420px on tablet and desktop (task RSS-QS-1-5-5); full width minus gutters on mobile.
+  &__panel {
+    @include m.card(t.$corner-extra-large, t.$shadow-level-2);
+
+    position: relative;
+    width: t.$dialog-width-mobile;
+    max-width: t.$dialog-width;
+    margin: auto;
+    padding: t.$size-3;
+    background-color: t.$color-surface-low;
+    color: t.$color-on-primary;
+    opacity: 0;
+    transform: scale(t.$scale-dialog-start) translateY(t.$size-2);
+    transition:
+      opacity t.$duration-base t.$easing-out,
+      transform t.$duration-base t.$easing-out;
+
+    @include bp.tablet-up {
+      width: t.$dialog-width;
+      padding: t.$size-4;
+    }
+
+    @include bp.reduced-motion {
+      transition-duration: 0s;
+    }
+  }
+
+  &.is-open &__panel {
+    opacity: 1;
+    transform: none;
+  }
+
+  &__close {
+    position: absolute;
+    top: t.$size-2;
+    right: t.$size-2;
+    width: t.$icon-size-large;
+    height: t.$icon-size-large;
+    padding: 0;
+    color: t.$color-on-primary;
+  }
+
+  // Guidebook "Auth Tab Switcher": outlined pill, active tab filled navy.
+  &__switcher {
+    display: flex;
+    margin-top: t.$size-4;
+    margin-bottom: t.$size-3;
+    padding: t.$size-05;
+    border: t.$border-width-thick solid t.$color-on-primary;
+    border-radius: t.$corner-medium;
+    background-color: t.$color-white;
+  }
+
+  &__tab {
+    flex: 1;
+    padding: t.$btn-small-padding;
+    border-radius: t.$corner-small;
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-bold;
+    color: t.$color-on-bg;
+    transition:
+      background-color t.$duration-fast t.$easing-standard,
+      color t.$duration-fast t.$easing-standard;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+      color: t.$color-on-primary;
+    }
+
+    &.is-active {
+      background-color: t.$color-on-primary;
+      color: t.$color-white;
+    }
+  }
+
+  &__body {
+    transition: opacity t.$duration-fast t.$easing-standard;
+
+    &.is-switching {
+      opacity: 0;
+    }
+  }
+
+  &__header {
+    margin-bottom: t.$size-3;
+  }
+
+  &__title {
+    font-size: t.$font-size-headline-medium;
+  }
+
+  &__subtitle {
+    margin-top: t.$size-05;
+    font-size: t.$font-size-body-small;
+    color: t.$color-on-bg;
+  }
+
+  &__status {
+    min-height: t.$size-3;
+    margin-top: t.$size-2;
+    font-size: t.$font-size-label-large;
+    color: t.$color-price-free;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: t.$size-2;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-05;
+  }
+
+  &__label {
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-medium;
+  }
+
+  &__control {
+    position: relative;
+    display: block;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: t.$size-2;
+    transform: translateY(-50%);
+    color: t.$color-on-bg;
+    pointer-events: none;
+  }
+
+  &__input {
+    width: 100%;
+    height: t.$input-height;
+    padding-inline: t.$size-5 t.$size-2;
+    border: t.$border-width-thick solid t.$color-on-primary;
+    border-radius: t.$corner-small;
+    background-color: t.$color-white;
+    font-size: t.$font-size-label-large;
+    transition:
+      background-color t.$duration-fast t.$easing-standard,
+      border-color t.$duration-fast t.$easing-standard;
+
+    &::placeholder {
+      color: t.$color-on-bg-low;
+    }
+
+    &:focus {
+      outline: none;
+      background-color: t.$color-surface;
+      border-color: t.$color-tertiary;
+    }
+
+    &[aria-invalid='true'] {
+      border-color: t.$color-error;
+    }
+  }
+
+  &__error {
+    min-height: t.$size-2;
+    font-size: t.$font-size-label-medium;
+    color: t.$color-error;
+  }
+
+  &__footer {
+    font-size: t.$font-size-label-large;
+    color: t.$color-on-bg;
+    text-align: center;
+  }
+
+  &__switch {
+    font-weight: t.$font-weight-bold;
+    color: t.$color-on-primary;
+    border-bottom: t.$border-width-thick solid transparent;
+    transition: border-color t.$duration-fast t.$easing-standard;
+
+    @include bp.hover {
+      border-color: t.$color-primary;
+    }
+  }
+}

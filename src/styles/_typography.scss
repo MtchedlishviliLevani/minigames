@@ -1,0 +1,21 @@
+@use 'tokens' as t;
+@use 'breakpoints' as bp;
+@use 'mixins' as m;
+
+h1,
+h2,
+h3 {
+  font-weight: t.$font-weight-bold;
+  line-height: t.$line-height-snug;
+  color: t.$color-on-primary;
+}
+
+.section-title {
+  @include m.section-title;
+
+  font-size: t.$font-size-headline-medium;
+
+  @include bp.desktop {
+    font-size: t.$font-size-headline-large;
+  }
+}

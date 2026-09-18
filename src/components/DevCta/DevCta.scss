@@ -1,0 +1,115 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+@use '../../styles/mixins' as m;
+
+.dev-cta {
+  &__inner {
+    display: grid;
+    gap: t.$size-2;
+
+    @include bp.tablet {
+      gap: t.$size-3;
+    }
+
+    @include bp.desktop {
+      grid-template-columns: t.$cta-grid-columns;
+      align-items: stretch;
+      gap: t.$size-5;
+    }
+  }
+
+  &__illustration {
+    width: 100%;
+    height: t.$illustration-height-mobile;
+    border-radius: t.$corner-large;
+    object-fit: cover;
+
+    @include bp.tablet {
+      height: t.$illustration-height-tablet;
+    }
+
+    @include bp.desktop {
+      height: 100%;
+    }
+  }
+
+  &__card {
+    @include m.card(t.$corner-extra-large, t.$shadow-level-1);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: t.$size-2;
+    padding: t.$size-3;
+
+    @include bp.tablet {
+      padding: t.$size-4;
+    }
+
+    @include bp.desktop {
+      justify-content: center;
+    }
+
+    @include bp.desktop-large {
+      align-self: center;
+      gap: t.$size-3;
+      padding: t.$size-5;
+    }
+  }
+
+  &__title {
+    @include m.section-title;
+
+    font-size: t.$font-size-headline-medium;
+
+    &::before {
+      display: none;
+    }
+
+    @include bp.desktop-large {
+      font-size: t.$font-size-headline-large;
+    }
+  }
+
+  &__text {
+    font-size: t.$font-size-body-small;
+    line-height: t.$line-height-base;
+
+    @include bp.tablet-up {
+      font-size: t.$font-size-body-medium;
+    }
+
+    @include bp.desktop-large {
+      font-size: t.$font-size-body-large;
+    }
+  }
+
+  &__button {
+    @include bp.mobile {
+      padding: t.$btn-small-padding;
+      font-size: t.$font-size-label-medium;
+    }
+
+    @include bp.desktop {
+      padding: t.$btn-large-padding;
+      font-size: t.$font-size-label-extra-large;
+    }
+  }
+
+  &__contact {
+    font-size: t.$font-size-label-medium;
+    color: t.$color-on-bg-low;
+
+    @include bp.desktop {
+      font-size: t.$font-size-label-large;
+    }
+  }
+
+  &__mail {
+    text-decoration: underline;
+
+    @include bp.hover {
+      color: t.$color-on-primary;
+    }
+  }
+}
