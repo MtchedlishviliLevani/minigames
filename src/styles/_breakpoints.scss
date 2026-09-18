@@ -4,6 +4,7 @@ $breakpoints: (
   tablet-min: 768px,
   tablet-max: 1023px,
   desktop-min: 1024px,
+  desktop-large-min: 1440px,
 );
 
 @mixin mobile {
@@ -32,6 +33,12 @@ $breakpoints: (
 
 @mixin desktop {
   @media (min-width: map.get($breakpoints, desktop-min)) {
+    @content;
+  }
+}
+
+@mixin desktop-large {
+  @media (min-width: map.get($breakpoints, desktop-large-min)) {
     @content;
   }
 }
