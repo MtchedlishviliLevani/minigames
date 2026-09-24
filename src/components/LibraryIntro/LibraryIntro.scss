@@ -1,0 +1,48 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.library-intro {
+  padding-block: t.$size-2;
+
+  @include bp.tablet {
+    padding-block: t.$size-3;
+  }
+
+  @include bp.desktop {
+    padding-block: t.$size-5;
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-1;
+  }
+
+  &__title {
+    font-size: t.$font-size-display-small;
+    line-height: t.$line-height-tight;
+
+    @include bp.tablet {
+      font-size: t.$font-size-display-medium;
+    }
+
+    @include bp.desktop {
+      font-size: t.$font-size-display-large;
+    }
+  }
+
+  &__subtitle {
+    font-size: t.$font-size-body-small;
+    font-weight: t.$font-weight-medium;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-bg;
+
+    @include bp.tablet {
+      font-size: t.$font-size-body-medium;
+    }
+
+    @include bp.desktop {
+      font-size: t.$font-size-body-large;
+    }
+  }
+}

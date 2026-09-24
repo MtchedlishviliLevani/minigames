@@ -16,8 +16,12 @@
     gap: t.$size-3;
 
     @include bp.desktop {
-      grid-template-columns: t.$footer-brand-width t.$footer-links-width;
+      grid-template-columns: minmax(0, t.$footer-brand-width) minmax(0, max-content);
       justify-content: space-between;
+    }
+
+    @include bp.desktop-large {
+      grid-template-columns: t.$footer-brand-width t.$footer-links-width;
     }
   }
 
