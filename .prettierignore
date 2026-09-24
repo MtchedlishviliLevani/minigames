@@ -1,3 +1,7 @@
 dist
 node_modules
 package-lock.json
+# Local-only notes and screenshots (git-excluded)
+FIRST-PR.md
+FINAL-PR.md
+screenshots/
