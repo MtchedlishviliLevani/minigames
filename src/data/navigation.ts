@@ -3,10 +3,11 @@ import type { FooterLinkGroup, NavLink, SocialLink } from '../types';
 export const BRAND_NAME = 'MiniGames';
 
 export const HOME_HREF = '/';
+export const LIBRARY_HREF = '/library';
 
 export const NAV_LINKS: NavLink[] = [
-  { label: 'Home', href: HOME_HREF },
-  { label: 'Library', href: HOME_HREF },
+  { label: 'Home', href: HOME_HREF, route: 'home' },
+  { label: 'Library', href: LIBRARY_HREF, route: 'library' },
   { label: 'Tournaments', href: HOME_HREF },
   { label: 'Community', href: HOME_HREF },
 ];
@@ -15,8 +16,8 @@ export const FOOTER_LINK_GROUPS: FooterLinkGroup[] = [
   {
     title: 'Explore',
     links: [
-      { label: 'Home', href: HOME_HREF },
-      { label: 'Library', href: HOME_HREF },
+      { label: 'Home', href: HOME_HREF, route: 'home' },
+      { label: 'Library', href: LIBRARY_HREF, route: 'library' },
       { label: 'Categories', href: HOME_HREF },
       { label: 'Tournaments', href: HOME_HREF },
     ],
