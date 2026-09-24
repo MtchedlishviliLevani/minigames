@@ -1,6 +1,11 @@
+import type { IconName } from '../components/Icon/Icon';
+
+export type Route = 'home' | 'library';
+
 export interface NavLink {
   label: string;
   href: string;
+  route?: Route;
 }
 
 export interface FooterLinkGroup {
@@ -44,4 +49,17 @@ export interface LeaderboardEntry {
   streakDays: number;
   favoriteGameSlug: string;
   favoriteGameName: string;
+}
+
+export interface Category {
+  slug: string;
+  label: string;
+}
+
+export interface SortOption {
+  id: string;
+  label: string;
+  prefix: string;
+  suffix?: string;
+  arrow: IconName;
 }
