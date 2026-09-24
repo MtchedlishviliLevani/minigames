@@ -1,7 +1,11 @@
 import './Icon.scss';
 import arrowBack from '../../assets/icons/arrow-back.svg?raw';
+import arrowDownward from '../../assets/icons/arrow-downward.svg?raw';
+import arrowDropDown from '../../assets/icons/arrow-drop-down.svg?raw';
 import arrowForward from '../../assets/icons/arrow-forward.svg?raw';
+import arrowUpward from '../../assets/icons/arrow-upward.svg?raw';
 import chat from '../../assets/icons/chat.svg?raw';
+import check from '../../assets/icons/check.svg?raw';
 import close from '../../assets/icons/close.svg?raw';
 import code from '../../assets/icons/code.svg?raw';
 import heart from '../../assets/icons/heart.svg?raw';
@@ -29,8 +33,12 @@ const ICONS = {
   mail,
   lock,
   user,
+  check,
   'arrow-back': arrowBack,
   'arrow-forward': arrowForward,
+  'arrow-drop-down': arrowDropDown,
+  'arrow-upward': arrowUpward,
+  'arrow-downward': arrowDownward,
 };
 
 export type IconName = keyof typeof ICONS;

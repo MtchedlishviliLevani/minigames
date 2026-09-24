@@ -1,0 +1,189 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.library-filters {
+  padding-block: t.$size-2;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-2;
+
+    @include bp.desktop {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: t.$size-3;
+    }
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: t.$size-2;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-block: t.$size-05;
+    margin-block: -#{t.$size-05};
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+    }
+  }
+}
+
+.chip {
+  flex: 0 0 auto;
+  padding: t.$btn-small-padding;
+  border: t.$border-width-thick solid t.$color-on-primary;
+  border-radius: t.$corner-extra-large;
+  background-color: t.$color-white;
+  font-size: t.$font-size-label-large;
+  font-weight: t.$font-weight-bold;
+  line-height: t.$line-height-tight;
+  color: t.$color-on-primary;
+  white-space: nowrap;
+  transition: background-color t.$duration-fast t.$easing-standard;
+
+  @include bp.hover {
+    background-color: t.$color-surface;
+  }
+
+  &--active {
+    background-color: t.$color-primary;
+
+    @include bp.hover {
+      background-color: t.$color-primary;
+    }
+  }
+}
+
+.sort {
+  position: relative;
+  flex: 0 0 auto;
+
+  @include bp.mobile {
+    align-self: stretch;
+  }
+
+  @include bp.tablet {
+    align-self: flex-start;
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: t.$size-1;
+    width: 100%;
+    padding: t.$btn-medium-padding;
+    border: t.$border-width-thick solid t.$color-on-primary;
+    border-radius: t.$corner-extra-large;
+    background-color: t.$color-white;
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+    white-space: nowrap;
+    transition: background-color t.$duration-fast t.$easing-standard;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+  }
+
+  &__label,
+  &__option-label {
+    display: inline-flex;
+    align-items: center;
+    gap: t.$size-05;
+  }
+
+  &__arrow {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+  }
+
+  &__caret {
+    flex-shrink: 0;
+    width: t.$icon-size-small;
+    height: t.$icon-size-small;
+    transition: transform t.$duration-fast t.$easing-standard;
+  }
+
+  &__toggle--open {
+    background-color: t.$color-surface;
+  }
+
+  &__toggle--open &__caret {
+    transform: rotate(180deg);
+  }
+
+  &__menu {
+    position: absolute;
+    z-index: t.$z-dropdown;
+    top: calc(100% + #{t.$size-1});
+    right: 0;
+    left: 0;
+    overflow: hidden;
+    border: t.$border-width-thick solid t.$color-on-primary;
+    border-radius: t.$corner-medium;
+    background-color: t.$color-white;
+    box-shadow: t.$shadow-level-1;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    gap: t.$size-1;
+    padding: t.$size-2;
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-medium;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color t.$duration-fast t.$easing-standard;
+
+    & + & {
+      border-top: t.$border-width solid t.$color-on-primary;
+    }
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+
+    &--selected {
+      background-color: t.$color-primary-low;
+      font-weight: t.$font-weight-extra-bold;
+
+      @include bp.hover {
+        background-color: t.$color-primary-low;
+      }
+    }
+  }
+
+  &__check {
+    flex-shrink: 0;
+    width: t.$icon-size-small;
+    height: t.$icon-size-small;
+    color: t.$color-tertiary;
+    visibility: hidden;
+  }
+
+  &__option--selected &__check {
+    visibility: visible;
+  }
+}
