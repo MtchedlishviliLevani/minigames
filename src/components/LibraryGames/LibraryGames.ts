@@ -4,6 +4,7 @@ import { categoryLabel } from '../../data/library';
 import type { Game } from '../../types';
 import { el } from '../../utils/dom';
 import { formatCompact } from '../../utils/format';
+import { openGameDetails } from '../GameDetailsDialog/GameDetailsDialog';
 import { Icon } from '../Icon/Icon';
 
 const Stat = (iconName: 'star' | 'heart', value: string): HTMLSpanElement =>
@@ -11,6 +12,16 @@ const Stat = (iconName: 'star' | 'heart', value: string): HTMLSpanElement =>
     className: 'game-tile__stat',
     children: [Icon(iconName, `game-tile__${iconName}`), el('span', { text: value })],
   });
+
+const DetailsButton = (game: Game): HTMLButtonElement => {
+  const button = el('button', {
+    className: 'btn btn--filled game-tile__details',
+    attrs: { type: 'button', 'aria-label': `Details about ${game.name}` },
+    text: 'Details',
+  });
+  button.addEventListener('click', openGameDetails);
+  return button;
+};
 
 const GameTile = (game: Game): HTMLLIElement =>
   el('li', {
@@ -41,11 +52,7 @@ const GameTile = (game: Game): HTMLLIElement =>
                   Stat('heart', formatCompact(game.likesCount)),
                 ],
               }),
-              el('button', {
-                className: 'btn btn--filled game-tile__details',
-                attrs: { type: 'button', 'aria-label': `Details about ${game.name}` },
-                text: 'Details',
-              }),
+              DetailsButton(game),
             ],
           }),
         ],
