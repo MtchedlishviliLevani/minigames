@@ -27,3 +27,5 @@ export const SORT_OPTIONS: [SortOption, ...SortOption[]] = [
 ];
 
 export const DEFAULT_SORT = 'rating-desc';
+
+export const TOTAL_PAGES = 4;

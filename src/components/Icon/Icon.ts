@@ -5,6 +5,8 @@ import arrowDropDown from '../../assets/icons/arrow-drop-down.svg?raw';
 import arrowForward from '../../assets/icons/arrow-forward.svg?raw';
 import arrowUpward from '../../assets/icons/arrow-upward.svg?raw';
 import chat from '../../assets/icons/chat.svg?raw';
+import chevronLeft from '../../assets/icons/chevron-left.svg?raw';
+import chevronRight from '../../assets/icons/chevron-right.svg?raw';
 import check from '../../assets/icons/check.svg?raw';
 import close from '../../assets/icons/close.svg?raw';
 import code from '../../assets/icons/code.svg?raw';
@@ -37,6 +39,8 @@ const ICONS = {
   'arrow-back': arrowBack,
   'arrow-forward': arrowForward,
   'arrow-drop-down': arrowDropDown,
+  'chevron-left': chevronLeft,
+  'chevron-right': chevronRight,
   'arrow-upward': arrowUpward,
   'arrow-downward': arrowDownward,
 };
