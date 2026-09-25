@@ -1,0 +1,466 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.game-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: t.$z-dialog;
+  display: none;
+  width: 100%;
+  max-width: 100vw;
+  height: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+
+  &[open] {
+    display: flex;
+  }
+
+  // Figma runs the panel edge to edge on mobile and insets it from tablet up.
+  @include bp.tablet-up {
+    padding: t.$size-2;
+  }
+
+  &::backdrop {
+    background-color: t.$color-overlay;
+    opacity: 0;
+    transition: opacity t.$duration-base t.$easing-standard;
+  }
+
+  &.is-open::backdrop {
+    opacity: 1;
+  }
+
+  &__panel {
+    width: 100%;
+    max-width: t.$dialog-width-game;
+    margin: auto;
+    overflow: hidden;
+    border: t.$border-width solid t.$color-outline-variant;
+    border-radius: t.$corner-extra-large;
+    background-color: t.$color-bg;
+    box-shadow: t.$shadow-level-3;
+    opacity: 0;
+    transform: scale(t.$scale-dialog-start) translateY(t.$size-2);
+    transition:
+      opacity t.$duration-base t.$easing-out,
+      transform t.$duration-base t.$easing-out;
+
+    @include bp.reduced-motion {
+      transition-duration: 0s;
+    }
+  }
+
+  &.is-open &__panel {
+    opacity: 1;
+    transform: none;
+  }
+
+  &__hero {
+    position: relative;
+    height: t.$game-dialog-hero-height;
+  }
+
+  &__cover {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__close {
+    position: absolute;
+    top: t.$size-2;
+    right: t.$size-2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: t.$size-5;
+    height: t.$size-5;
+    border: t.$border-width-thick solid t.$color-on-primary;
+    border-radius: t.$corner-full;
+    background-color: t.$color-white;
+    color: t.$color-on-primary;
+    cursor: pointer;
+    box-shadow: t.$shadow-level-0;
+    transition: background-color t.$duration-fast t.$easing-standard;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+  }
+
+  &__close-icon {
+    width: t.$icon-size-medium;
+    height: t.$icon-size-medium;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-3;
+    padding: t.$size-3;
+  }
+
+  &__headline {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-1;
+
+    @include bp.tablet-up {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: t.$size-1;
+    }
+  }
+
+  &__title {
+    font-size: t.$font-size-display-medium;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+
+    @include bp.tablet-up {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__stats {
+    display: flex;
+    align-items: center;
+    gap: t.$size-2;
+  }
+
+  &__stat {
+    display: inline-flex;
+    align-items: center;
+    gap: t.$size-05;
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+  }
+
+  &__star {
+    flex-shrink: 0;
+    width: t.$icon-size-medium;
+    height: t.$icon-size-medium;
+    color: t.$color-primary;
+  }
+
+  &__heart {
+    flex-shrink: 0;
+    width: t.$icon-size-medium;
+    height: t.$icon-size-medium;
+    color: t.$color-like;
+  }
+
+  &__description {
+    font-size: t.$font-size-body-medium;
+    line-height: t.$line-height-snug;
+    color: t.$color-on-bg;
+  }
+
+  &__facts {
+    display: grid;
+    gap: t.$size-2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include bp.tablet-up {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  &__fact {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-1;
+    padding: t.$size-1 t.$size-2;
+    border: t.$border-width solid t.$color-outline-variant;
+    border-radius: t.$corner-small;
+    background-color: t.$color-white;
+    box-shadow: t.$shadow-level-05;
+  }
+
+  &__fact-label {
+    font-size: t.$font-size-label-medium;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-bg;
+  }
+
+  &__fact-value {
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+  }
+
+  &__actions {
+    display: flex;
+    gap: t.$size-2;
+  }
+
+  &__play {
+    flex: 1 1 0;
+    height: t.$size-6;
+    padding: t.$btn-large-padding;
+    border-radius: t.$corner-medium;
+    font-size: t.$font-size-label-extra-large;
+    box-shadow: t.$shadow-level-1;
+  }
+
+  // Figma shows the label from tablet up and an icon-only square on mobile.
+  &__favorite {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: t.$size-1;
+    width: t.$size-6;
+    height: t.$size-6;
+    padding: 0;
+    border-color: t.$color-outline-variant;
+    border-radius: t.$corner-medium;
+    background-color: t.$color-white;
+    font-size: t.$font-size-label-extra-large;
+    box-shadow: t.$shadow-level-1;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+
+    @include bp.tablet-up {
+      flex: 1 1 0;
+      width: auto;
+      padding: t.$btn-large-padding;
+    }
+
+    &--active {
+      color: t.$color-like;
+      border-color: t.$color-like;
+    }
+  }
+
+  &__favorite-icon {
+    flex-shrink: 0;
+    width: t.$icon-size-medium;
+    height: t.$icon-size-medium;
+  }
+
+  &__favorite-label {
+    display: none;
+
+    @include bp.tablet-up {
+      display: inline;
+    }
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-2;
+  }
+
+  &__section-title {
+    display: flex;
+    align-items: center;
+    gap: t.$size-1;
+    font-size: t.$font-size-body-medium;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+  }
+
+  &__records {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-1;
+  }
+
+  &__record {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: t.$size-2;
+    padding: t.$size-2;
+    border-radius: t.$corner-small;
+    background-color: t.$color-white;
+  }
+
+  &__record-player,
+  &__record-score {
+    display: inline-flex;
+    align-items: center;
+    gap: t.$size-2;
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+  }
+
+  &__record-when {
+    font-size: t.$font-size-label-medium;
+    font-weight: t.$font-weight-regular;
+    color: t.$color-on-bg;
+  }
+
+  &__comment-form {
+    display: flex;
+    align-items: flex-start;
+    gap: t.$size-2;
+  }
+
+  &__avatar {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: t.$avatar-size;
+    height: t.$avatar-size;
+    border: t.$border-width solid t.$color-on-primary;
+    border-radius: t.$corner-full;
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+
+    &--small {
+      width: t.$avatar-size-small;
+      height: t.$avatar-size-small;
+      font-size: t.$font-size-label-medium;
+    }
+
+    &--me,
+    &--2 {
+      background-color: t.$color-primary;
+    }
+
+    &--1 {
+      background-color: t.$color-avatar-3;
+    }
+
+    &--3 {
+      background-color: t.$color-avatar-1;
+    }
+  }
+
+  &__textarea {
+    flex: 1 1 auto;
+    min-width: 0;
+    // Floor matches Figma's resting height; JS grows it to the max from here.
+    min-height: t.$size-6;
+    max-height: t.$game-dialog-textarea-max;
+    padding: t.$size-1 t.$size-2;
+    overflow-y: auto;
+    border: t.$border-width solid t.$color-on-primary;
+    border-radius: t.$corner-small;
+    background-color: t.$color-white;
+    font-family: inherit;
+    font-size: t.$font-size-label-large;
+    line-height: t.$line-height-base;
+    color: t.$color-on-primary;
+    resize: none;
+
+    &::placeholder {
+      color: t.$color-text-placeholder;
+    }
+  }
+
+  &__send {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: t.$avatar-size;
+    height: t.$avatar-size;
+    border: t.$border-width solid t.$color-on-primary;
+    border-radius: t.$corner-small;
+    background-color: t.$color-bg-footer-low;
+    color: t.$color-white;
+    cursor: pointer;
+    transition: background-color t.$duration-fast t.$easing-standard;
+
+    @include bp.hover {
+      background-color: t.$color-bg-footer-lowest;
+    }
+  }
+
+  &__send-icon {
+    width: t.$icon-size-medium;
+    height: t.$icon-size-medium;
+  }
+
+  &__comments {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-2;
+  }
+
+  &__comment {
+    display: flex;
+    flex-direction: column;
+    gap: t.$size-1;
+    padding: t.$size-2;
+    border-radius: t.$corner-medium;
+    background-color: t.$color-white;
+    box-shadow: t.$shadow-level-05;
+  }
+
+  &__comment-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: t.$size-2;
+  }
+
+  &__comment-author {
+    display: inline-flex;
+    align-items: center;
+    gap: t.$size-1;
+    font-size: t.$font-size-body-small;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+  }
+
+  &__comment-time {
+    flex-shrink: 0;
+    font-size: t.$font-size-label-medium;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-bg;
+  }
+
+  &__comment-body {
+    font-size: t.$font-size-body-small;
+    line-height: t.$line-height-snug;
+    color: t.$color-on-primary;
+  }
+
+  &__like {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: t.$size-05;
+    font-size: t.$font-size-label-medium;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    transition: color t.$duration-fast t.$easing-standard;
+
+    &--active {
+      color: t.$color-like;
+    }
+  }
+
+  &__like-icon {
+    width: t.$icon-size-small;
+    height: t.$icon-size-small;
+  }
+}

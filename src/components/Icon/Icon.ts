@@ -16,6 +16,7 @@ import mail from '../../assets/icons/mail.svg?raw';
 import menu from '../../assets/icons/menu.svg?raw';
 import puzzle from '../../assets/icons/puzzle.svg?raw';
 import rss from '../../assets/icons/rss.svg?raw';
+import send from '../../assets/icons/send.svg?raw';
 import share from '../../assets/icons/share.svg?raw';
 import star from '../../assets/icons/star.svg?raw';
 import upload from '../../assets/icons/upload.svg?raw';
@@ -28,6 +29,7 @@ const ICONS = {
   star,
   heart,
   upload,
+  send,
   share,
   chat,
   rss,

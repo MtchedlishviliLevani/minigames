@@ -1,5 +1,6 @@
 import { AuthDialog } from './components/AuthDialog/AuthDialog';
 import { Footer } from './components/Footer/Footer';
+import { GameDetailsDialog } from './components/GameDetailsDialog/GameDetailsDialog';
 import { Header } from './components/Header/Header';
 import { MobileMenu } from './components/MobileMenu/MobileMenu';
 import { HomePage } from './pages/HomePage';
@@ -24,5 +25,5 @@ export function mountApp(root: HTMLElement): void {
   renderPage(getRoute());
   onRouteChange(renderPage);
 
-  root.replaceChildren(Header(), main, Footer(), MobileMenu(), AuthDialog());
+  root.replaceChildren(Header(), main, Footer(), MobileMenu(), AuthDialog(), GameDetailsDialog());
 }
