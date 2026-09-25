@@ -26,10 +26,12 @@ $color-like: #ff4b4b;
 $color-error: #b3261e;
 $color-price-free: #0b8a8f;
 
+$color-text-placeholder: #969696;
 $color-outline: #e5e7eb;
 $color-outline-variant: #d2d2d2;
 $color-disabled-surface: #f5f5f5;
 
+$color-avatar-1: #e9eef6;
 $color-avatar-2: #a3e2c9;
 $color-avatar-3: #bce3ff;
 $color-avatar-4: #ffc8ff;
@@ -109,6 +111,8 @@ $btn-small-padding: 8px 16px;
 $btn-icon-padding: 8px;
 
 // Shadows
+$shadow-level-0: 2px 2px 0 $color-on-primary;
+$shadow-level-05: 3px 3px 0 $color-on-primary;
 $shadow-level-1: 4px 4px 0 $color-on-primary;
 $shadow-level-2: 6px 6px 0 $color-on-primary;
 $shadow-level-3: 8px 8px 0 $color-on-primary;
@@ -187,6 +191,9 @@ $footer-links-width: 511px;
 
 // Auth dialog
 $dialog-width: 420px;
+$dialog-width-game: 600px;
+$game-dialog-hero-height: 220px;
+$game-dialog-textarea-max: 88px;
 $dialog-width-mobile: calc(100vw - #{$size-4});
 $input-height: 48px;
 $scale-dialog-start: 0.94;
