@@ -72,6 +72,7 @@ $font-weight-extra-bold: 800;
 
 $line-height-tight: 1.15;
 $line-height-snug: 1.3;
+$line-height-relaxed: 1.4;
 $line-height-base: 1.5;
 
 // Sizes (8px scale)
@@ -172,6 +173,14 @@ $illustration-height-tablet: 300px;
 $cta-grid-columns: minmax(0, 682fr) minmax(0, 958fr);
 
 // Footer
+$game-tile-badge-padding-block: 2px;
+$game-tile-min-width: 700px;
+$game-tile-media-mobile: 160px;
+$game-tile-media-tablet: 270px;
+$game-tile-media-desktop: 320px;
+$game-tile-height-tablet: 152px;
+$game-tile-height-desktop: 200px;
+
 $footer-brand-width: 400px;
 $footer-links-width: 511px;
 

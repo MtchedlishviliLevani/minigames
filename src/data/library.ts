@@ -15,6 +15,10 @@ export const CATEGORIES: Category[] = [
 
 export const DEFAULT_CATEGORY = 'all';
 
+export function categoryLabel(slug: string): string {
+  return CATEGORIES.find((category) => category.slug === slug)?.label ?? slug;
+}
+
 export const SORT_OPTIONS: [SortOption, ...SortOption[]] = [
   { id: 'rating-asc', label: 'Rating ascending', prefix: 'Rating', arrow: 'arrow-upward' },
   { id: 'rating-desc', label: 'Rating descending', prefix: 'Rating', arrow: 'arrow-downward' },
