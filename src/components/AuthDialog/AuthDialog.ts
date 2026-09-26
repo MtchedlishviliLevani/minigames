@@ -61,7 +61,7 @@ const tabs: Record<AuthMode, HTMLButtonElement> = {
   login: Tab('login'),
   register: Tab('register'),
 };
-const forms: Record<AuthMode, HTMLFormElement> = {
+const forms: Record<AuthMode, HTMLElement> = {
   login: AuthForm({ mode: 'login', onSubmit: showStatus, onSwitch: requestMode }),
   register: AuthForm({ mode: 'register', onSubmit: showStatus, onSwitch: requestMode }),
 };
