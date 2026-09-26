@@ -45,6 +45,16 @@
       height: t.$card-height-desktop;
     }
 
+    // Widths animate so cards grow toward the centre and shrink away from it.
+    transition:
+      flex-basis t.$duration-base t.$easing-standard,
+      flex-grow t.$duration-base t.$easing-standard,
+      opacity t.$duration-base t.$easing-standard;
+
+    @include bp.reduced-motion {
+      transition-duration: 0s;
+    }
+
     &--peek {
       display: none;
       flex: 0 0 t.$card-peek-width-desktop;
@@ -64,11 +74,10 @@
       @include bp.desktop {
         flex: 0 1 t.$card-regular-width;
         min-width: 0;
-        container-type: inline-size;
       }
 
       @include bp.desktop-large {
-        min-width: t.$card-info-min-width;
+        min-width: t.$card-regular-width;
       }
     }
 
@@ -81,18 +90,15 @@
       }
     }
 
-    &--peek .game-card__info {
+    // Cards outside the window are taken out of flow entirely: at zero width they
+    // would still claim the track gap and their own border.
+    &--hidden {
       display: none;
     }
 
-    &--regular .game-card__info {
-      @include bp.below-desktop {
-        display: none;
-      }
-
-      @container (max-width: #{t.$card-info-min-width - 1px}) {
-        display: none;
-      }
+    // Figma drops the overlay once a card renders narrower than 288px.
+    &--compact .game-card__info {
+      display: none;
     }
   }
 }
@@ -145,6 +151,17 @@
     display: inline-flex;
     align-items: center;
     gap: t.$size-05;
+  }
+
+  // Stretched hit area: the whole card opens the dialog, but an <h3> cannot live
+  // inside a <button>, so the control is layered over the card instead.
+  &__open {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
   }
 
   &__star {
