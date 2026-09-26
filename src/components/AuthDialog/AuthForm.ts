@@ -162,16 +162,18 @@ function setError(form: HTMLFormElement, name: string, message: string | null): 
   }
 }
 
-export function resetAuthForm(form: HTMLFormElement): void {
+export function resetAuthForm(panel: HTMLElement): void {
+  const form = panel.querySelector('form');
+  if (!form) return;
   form.reset();
   for (const input of form.querySelectorAll('input')) setError(form, input.name, null);
 }
 
-export function focusAuthForm(form: HTMLFormElement): void {
-  form.querySelector('input')?.focus();
+export function focusAuthForm(panel: HTMLElement): void {
+  panel.querySelector('input')?.focus();
 }
 
-export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): HTMLFormElement => {
+export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): HTMLDivElement => {
   const copy = COPY[mode];
 
   const switchButton = el('button', {
@@ -186,9 +188,6 @@ export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): HTMLFormE
   const form = el('form', {
     className: 'auth-form',
     attrs: {
-      id: `auth-panel-${mode}`,
-      role: 'tabpanel',
-      'aria-labelledby': `auth-tab-${mode}`,
       'aria-label': mode === 'login' ? 'Log in form' : 'Sign up form',
       novalidate: '',
     },
@@ -221,5 +220,13 @@ export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): HTMLFormE
     if (event.target instanceof HTMLInputElement) setError(form, event.target.name, null);
   });
 
-  return form;
+  return el('div', {
+    className: 'auth-form-panel',
+    attrs: {
+      id: `auth-panel-${mode}`,
+      role: 'tabpanel',
+      'aria-labelledby': `auth-tab-${mode}`,
+    },
+    children: [form],
+  });
 };
