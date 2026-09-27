@@ -134,11 +134,22 @@ const SortControl = (): HTMLElement => {
   });
 
   menu.addEventListener('keydown', (event) => {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
     const option = (event.target as Element).closest<HTMLElement>('.sort__option');
     if (!option) return;
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      select(option);
+      return;
+    }
+
+    // A listbox is expected to move the focused option with the arrow keys.
+    const step = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
+    if (step === 0) return;
     event.preventDefault();
-    select(option);
+    const index = options.findIndex((item) => item === option);
+    const next = options[(index + step + options.length) % options.length];
+    next?.focus();
   });
 
   const sort = el('div', { className: 'sort', children: [toggle, menu] });
