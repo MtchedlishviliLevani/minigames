@@ -28,4 +28,6 @@ export const SORT_OPTIONS: [SortOption, ...SortOption[]] = [
 
 export const DEFAULT_SORT = 'rating-desc';
 
+/** The mockup shows one page of six cards; 24 mock games make four pages. */
+export const GAMES_PER_PAGE = 6;
 export const TOTAL_PAGES = 4;

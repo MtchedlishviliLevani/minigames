@@ -321,7 +321,7 @@
     justify-content: center;
     width: t.$avatar-size;
     height: t.$avatar-size;
-    border: t.$border-width solid t.$color-on-primary;
+    border: t.$border-width-medium solid t.$color-on-primary;
     border-radius: t.$corner-full;
     font-size: t.$font-size-label-large;
     font-weight: t.$font-weight-bold;
@@ -331,6 +331,7 @@
     &--small {
       width: t.$avatar-size-small;
       height: t.$avatar-size-small;
+      border-width: t.$border-width;
       font-size: t.$font-size-label-medium;
     }
 
@@ -377,7 +378,7 @@
     justify-content: center;
     width: t.$avatar-size;
     height: t.$avatar-size;
-    border: t.$border-width solid t.$color-on-primary;
+    border: t.$border-width-medium solid t.$color-on-primary;
     border-radius: t.$corner-small;
     background-color: t.$color-bg-footer-low;
     color: t.$color-white;

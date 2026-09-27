@@ -119,6 +119,7 @@ $shadow-level-3: 8px 8px 0 $color-on-primary;
 
 // Borders
 $border-width: 1px;
+$border-width-medium: 1.5px;
 $border-width-thick: 2px;
 
 // Layout
@@ -158,7 +159,6 @@ $card-featured-width-mobile: 218px;
 $card-featured-width-tablet: 448px;
 $card-featured-width-desktop: 816px;
 // Regular cards drop their info overlay when a narrow desktop squeezes them below this.
-$card-info-min-width: 200px;
 $card-track-padding-mobile: $size-05;
 $card-track-padding: $size-1;
 
