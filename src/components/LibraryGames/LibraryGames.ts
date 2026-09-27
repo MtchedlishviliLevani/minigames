@@ -1,6 +1,6 @@
 import './LibraryGames.scss';
 import { assetUrl, getGames } from '../../api/mock-api';
-import { categoryLabel } from '../../data/library';
+import { categoryLabel, GAMES_PER_PAGE } from '../../data/library';
 import type { Game } from '../../types';
 import { el } from '../../utils/dom';
 import { formatCompact } from '../../utils/format';
@@ -68,7 +68,7 @@ export const LibraryGames = (): HTMLElement => {
 
   getGames()
     .then((games) => {
-      list.replaceChildren(...games.map((game) => GameTile(game)));
+      list.replaceChildren(...games.slice(0, GAMES_PER_PAGE).map((game) => GameTile(game)));
     })
     .catch(() => {
       list.append(
