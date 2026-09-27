@@ -1,10 +1,12 @@
-1. **Task:** https://github.com/rolling-scopes-school/qualifying-stage/blob/main/tasks/minigames/story-1.md
+1. **Task:** <!-- https://github.com/rolling-scopes-school/qualifying-stage/blob/main/tasks/minigames/story-N.md -->
 2. **Screenshot:**
 3. **Deployment:** <!-- https://... -->
-4. **Done** DD.MM.YYYY / **deadline** 21.09.2026
-5. **Score:** <!-- xxx --> / 294
+4. **Done** DD.MM.YYYY / **deadline** DD.MM.YYYY
+5. **Score:** <!-- xxx / total -->
 
 ## Self-check
+
+<!-- Replace with the task list for the story this PR covers. -->
 
 - Repository Setup (25)
   - [ ] Repository, README, .gitignore (10)
