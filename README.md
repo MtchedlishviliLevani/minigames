@@ -49,8 +49,10 @@ minigames/
 │   ├── main.ts         # Entry point
 │   ├── app.ts          # App bootstrap — builds the page from components
 │   ├── api/            # Mock API (fetches JSON from public/mock)
-│   ├── components/     # UI components (Header, Hero, Carousel, Leaderboard, Footer, AuthDialog…)
-│   ├── data/           # Static content (navigation links, brand text)
+│   ├── components/     # UI components (Header, Carousel, Library*, GameDetailsDialog, Footer…)
+│   ├── pages/          # Page compositions (HomePage, LibraryPage)
+│   ├── router/         # Client-side page switch (no reload, no History API yet)
+│   ├── data/           # Static content (navigation, categories, game details)
 │   ├── styles/         # Sass tokens, breakpoints, mixins, reset, layout
 │   ├── types/          # Shared TypeScript types
 │   ├── utils/          # Helpers (DOM builder, formatting, validation)

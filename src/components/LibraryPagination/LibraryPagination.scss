@@ -1,0 +1,81 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.library-pagination {
+  padding-block: t.$size-3;
+
+  @include bp.tablet-up {
+    padding-block: t.$size-5;
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: t.$size-1;
+
+    @include bp.desktop {
+      gap: t.$size-2;
+    }
+  }
+}
+
+.pagination {
+  &__pages {
+    display: flex;
+    align-items: center;
+    gap: t.$size-1;
+
+    @include bp.desktop {
+      gap: t.$size-2;
+    }
+  }
+
+  &__page,
+  &__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: t.$control-size-small;
+    height: t.$control-size-small;
+    border: t.$border-width-thick solid t.$color-black;
+    border-radius: t.$corner-full;
+    background-color: t.$color-white;
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-on-primary;
+    cursor: pointer;
+    transition:
+      background-color t.$duration-fast t.$easing-standard,
+      border-color t.$duration-fast t.$easing-standard,
+      color t.$duration-fast t.$easing-standard;
+
+    @include bp.hover {
+      background-color: t.$color-surface;
+    }
+
+    &:disabled {
+      border-color: t.$color-outline-variant;
+      background-color: t.$color-disabled-surface;
+      opacity: t.$opacity-disabled;
+      cursor: not-allowed;
+    }
+  }
+
+  // Figma drops the outline on the current page so the filled pill reads as one shape.
+  &__page--current {
+    border-color: transparent;
+    background-color: t.$color-bg-footer-low;
+    color: t.$color-white;
+
+    @include bp.hover {
+      background-color: t.$color-bg-footer-low;
+    }
+  }
+
+  &__icon {
+    width: t.$icon-size-medium;
+    height: t.$icon-size-medium;
+  }
+}

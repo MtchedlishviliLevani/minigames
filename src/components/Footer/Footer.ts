@@ -8,8 +8,10 @@ import {
   RS_SCHOOL_URL,
   SOCIAL_LINKS,
 } from '../../data/navigation';
+import { getRoute, navigate } from '../../router/router';
 import type { FooterLinkGroup, SocialLink } from '../../types';
 import { el } from '../../utils/dom';
+import { createNavLink } from '../../utils/navLink';
 import { Icon } from '../Icon/Icon';
 import { Logo } from '../Logo/Logo';
 
@@ -26,7 +28,10 @@ const LinkGroup = (group: FooterLinkGroup): HTMLElement =>
         children: group.links.map((link) =>
           el('li', {
             children: [
-              el('a', { className: 'footer__link', attrs: { href: link.href }, text: link.label }),
+              createNavLink(link, getRoute(), {
+                className: 'footer__link',
+                activeClassName: 'footer__link--active',
+              }),
             ],
           })
         ),
@@ -34,16 +39,18 @@ const LinkGroup = (group: FooterLinkGroup): HTMLElement =>
     ],
   });
 
-const SocialItem = (link: SocialLink): HTMLLIElement =>
-  el('li', {
-    children: [
-      el('a', {
-        className: 'footer__social-link',
-        attrs: { href: link.href, 'aria-label': link.label },
-        children: [Icon(link.icon, 'icon--small')],
-      }),
-    ],
+const SocialItem = (link: SocialLink): HTMLLIElement => {
+  const anchor = el('a', {
+    className: 'footer__social-link',
+    attrs: { href: link.href, 'aria-label': link.label },
+    children: [Icon(link.icon, 'icon--small')],
   });
+  anchor.addEventListener('click', (event) => {
+    event.preventDefault();
+    navigate('home');
+  });
+  return el('li', { children: [anchor] });
+};
 
 const SocialGroup = (): HTMLElement =>
   el('div', {

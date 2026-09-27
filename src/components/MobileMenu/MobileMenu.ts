@@ -1,7 +1,9 @@
 import './MobileMenu.scss';
 import { NAV_LINKS } from '../../data/navigation';
+import { getRoute, onRouteChange } from '../../router/router';
 import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
+import { createNavLink, setNavLinkActive } from '../../utils/navLink';
 import { openAuthDialog } from '../AuthDialog/AuthDialog';
 import { setBurgerOpen } from '../Header/Header';
 import { Icon } from '../Icon/Icon';
@@ -31,13 +33,12 @@ export function closeMenu(): void {
   isOpen = false;
   const drawer = menu;
   drawer.classList.remove('is-open');
-  drawer.addEventListener(
-    'transitionend',
-    (event) => {
-      if (event.target === drawer) drawer.hidden = true;
-    },
-    { once: true }
-  );
+  const hideDrawer = (event: TransitionEvent): void => {
+    if (event.target !== drawer) return;
+    drawer.hidden = true;
+    drawer.removeEventListener('transitionend', hideDrawer);
+  };
+  drawer.addEventListener('transitionend', hideDrawer);
   document.body.classList.remove('is-locked');
   setBurgerOpen(false);
   lastFocused?.focus();
@@ -51,16 +52,7 @@ export function toggleMenu(): void {
   }
 }
 
-const MenuLink = (label: string, href: string, isActive: boolean): HTMLLIElement => {
-  const link = el('a', {
-    className: `mobile-menu__link${isActive ? ' mobile-menu__link--active' : ''}`,
-    attrs: { href },
-    text: label,
-  });
-  if (isActive) link.setAttribute('aria-current', 'page');
-  link.addEventListener('click', closeMenu);
-  return el('li', { children: [link] });
-};
+const ACTIVE_CLASS = 'mobile-menu__link--active';
 
 const AuthButton = (mode: AuthMode, label: string, variant: string): HTMLButtonElement => {
   const button = el('button', {
@@ -76,6 +68,21 @@ const AuthButton = (mode: AuthMode, label: string, variant: string): HTMLButtonE
 };
 
 export const MobileMenu = (): HTMLElement => {
+  const anchors = NAV_LINKS.map((link) =>
+    createNavLink(
+      link,
+      getRoute(),
+      { className: 'mobile-menu__link', activeClassName: ACTIVE_CLASS },
+      closeMenu
+    )
+  );
+
+  onRouteChange((route) => {
+    anchors.forEach((anchor, index) => {
+      setNavLinkActive(anchor, NAV_LINKS[index]?.route === route, ACTIVE_CLASS);
+    });
+  });
+
   const closeButton = el('button', {
     className: 'btn btn--icon mobile-menu__close',
     attrs: { type: 'button', 'aria-label': 'Close menu' },
@@ -94,7 +101,7 @@ export const MobileMenu = (): HTMLElement => {
         children: [
           el('ul', {
             className: 'mobile-menu__links',
-            children: NAV_LINKS.map((link, index) => MenuLink(link.label, link.href, index === 0)),
+            children: anchors.map((anchor) => el('li', { children: [anchor] })),
           }),
         ],
       }),

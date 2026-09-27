@@ -1,7 +1,9 @@
 import './Header.scss';
 import { NAV_LINKS } from '../../data/navigation';
+import { getRoute, onRouteChange } from '../../router/router';
 import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
+import { createNavLink, setNavLinkActive } from '../../utils/navLink';
 import { openAuthDialog } from '../AuthDialog/AuthDialog';
 import { Icon } from '../Icon/Icon';
 import { Logo } from '../Logo/Logo';
@@ -16,15 +18,7 @@ export function setBurgerOpen(isOpen: boolean): void {
   burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
 }
 
-const NavLink = (label: string, href: string, isActive: boolean): HTMLLIElement => {
-  const link = el('a', {
-    className: `header__link${isActive ? ' header__link--active' : ''}`,
-    attrs: { href },
-    text: label,
-  });
-  if (isActive) link.setAttribute('aria-current', 'page');
-  return el('li', { children: [link] });
-};
+const ACTIVE_CLASS = 'header__link--active';
 
 const AuthButton = (mode: AuthMode, label: string, variant: string): HTMLButtonElement => {
   const button = el('button', {
@@ -57,13 +51,26 @@ const Burger = (): HTMLButtonElement => {
 };
 
 export const Header = (): HTMLElement => {
+  const anchors = NAV_LINKS.map((link) =>
+    createNavLink(link, getRoute(), {
+      className: 'header__link',
+      activeClassName: ACTIVE_CLASS,
+    })
+  );
+
+  onRouteChange((route) => {
+    anchors.forEach((anchor, index) => {
+      setNavLinkActive(anchor, NAV_LINKS[index]?.route === route, ACTIVE_CLASS);
+    });
+  });
+
   const nav = el('nav', {
     className: 'header__nav',
     attrs: { 'aria-label': 'Main navigation' },
     children: [
       el('ul', {
         className: 'header__links',
-        children: NAV_LINKS.map((link, index) => NavLink(link.label, link.href, index === 0)),
+        children: anchors.map((anchor) => el('li', { children: [anchor] })),
       }),
     ],
   });
