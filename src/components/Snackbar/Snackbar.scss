@@ -1,0 +1,86 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.snackbar-host {
+  position: fixed;
+  right: t.$snackbar-offset;
+  bottom: t.$snackbar-offset;
+  left: t.$snackbar-offset;
+  z-index: t.$z-snackbar;
+  display: flex;
+  flex-direction: column;
+  gap: t.$size-1;
+  align-items: flex-end;
+  pointer-events: none;
+
+  @include bp.tablet-up {
+    left: auto;
+    max-width: t.$snackbar-max-width;
+  }
+}
+
+.snackbar {
+  display: flex;
+  align-items: flex-start;
+  gap: t.$size-1;
+  width: 100%;
+  padding: t.$size-2;
+  border: t.$border-width-thick solid t.$color-on-primary;
+  border-left-width: t.$feedback-accent-width;
+  border-radius: t.$corner-medium;
+  background-color: t.$color-white;
+  box-shadow: t.$shadow-level-1;
+  opacity: 0;
+  transform: translateY(t.$snackbar-enter-offset);
+  transition:
+    opacity t.$duration-base t.$easing-standard,
+    transform t.$duration-base t.$easing-standard;
+  pointer-events: auto;
+
+  &.is-open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @include bp.reduced-motion {
+    transition: none;
+  }
+
+  &__message {
+    flex: 1;
+    font-size: t.$font-size-body-small;
+    line-height: t.$line-height-base;
+    color: t.$color-on-primary;
+  }
+
+  &__dismiss {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: none;
+    color: t.$color-on-bg;
+    cursor: pointer;
+
+    @include bp.hover {
+      color: t.$color-on-primary;
+    }
+  }
+
+  &--success {
+    border-left-color: t.$color-success;
+  }
+
+  &--error {
+    border-left-color: t.$color-error;
+  }
+
+  &--warning {
+    border-left-color: t.$color-warning;
+  }
+
+  &--info {
+    border-left-color: t.$color-info;
+  }
+}

@@ -1,0 +1,51 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.data-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: t.$size-1;
+  width: 100%;
+  padding: t.$size-4 t.$size-2;
+  border: t.$border-width-thick dashed t.$color-outline-variant;
+  border-radius: t.$corner-large;
+  background-color: t.$color-surface-low;
+  text-align: center;
+
+  @include bp.tablet-up {
+    padding: t.$size-6 t.$size-4;
+  }
+
+  &__title {
+    font-size: t.$font-size-headline-small;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-snug;
+    color: t.$color-on-primary;
+  }
+
+  &__message {
+    max-width: t.$hero-card-max-width;
+    font-size: t.$font-size-body-medium;
+    line-height: t.$line-height-base;
+    color: t.$color-on-bg;
+  }
+
+  &__action {
+    margin-top: t.$size-1;
+  }
+
+  &--error {
+    border-style: solid;
+    border-color: t.$color-error;
+    background-color: t.$color-white;
+  }
+
+  &--error &__title {
+    color: t.$color-error;
+  }
+
+  &--empty {
+    border-style: dashed;
+  }
+}
