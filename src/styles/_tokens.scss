@@ -214,3 +214,22 @@ $z-dialog: 1000;
 // Misc
 $opacity-disabled: 0.5;
 $size-visually-hidden: 1px;
+
+// Data states
+$color-skeleton: #e8e6e0;
+$color-skeleton-highlight: #f6f4ef;
+$skeleton-shimmer-duration: 1400ms;
+$skeleton-line-small: 12px;
+$skeleton-line-medium: 16px;
+$skeleton-line-large: 24px;
+$skeleton-opacity: 0.85;
+
+// Feedback
+$color-success: #0f7b55;
+$color-warning: #9a6700;
+$color-info: $color-tertiary;
+$feedback-accent-width: $size-05;
+$snackbar-max-width: 400px;
+$snackbar-offset: $size-3;
+$snackbar-enter-offset: $size-2;
+$z-snackbar: 1100;

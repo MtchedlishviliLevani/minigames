@@ -1,0 +1,67 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.skeleton {
+  display: block;
+  width: 100%;
+  height: t.$skeleton-line-medium;
+  border-radius: t.$corner-small;
+  background-color: t.$color-skeleton;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    t.$color-skeleton-highlight 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  opacity: t.$skeleton-opacity;
+  animation: skeleton-shimmer t.$skeleton-shimmer-duration linear infinite;
+
+  @include bp.reduced-motion {
+    animation: none;
+  }
+
+  &--small {
+    height: t.$skeleton-line-small;
+  }
+
+  &--medium {
+    height: t.$skeleton-line-medium;
+  }
+
+  &--large {
+    height: t.$skeleton-line-large;
+  }
+
+  &--short {
+    width: 60%;
+  }
+
+  &--circle {
+    width: t.$avatar-size;
+    height: t.$avatar-size;
+    border-radius: t.$corner-full;
+  }
+
+  &--fill {
+    height: 100%;
+    border-radius: 0;
+  }
+}
+
+.skeleton-text {
+  display: flex;
+  flex-direction: column;
+  gap: t.$size-1;
+  width: 100%;
+}
