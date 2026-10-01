@@ -47,7 +47,7 @@ const SocialItem = (link: SocialLink): HTMLLIElement => {
   });
   anchor.addEventListener('click', (event) => {
     event.preventDefault();
-    navigate('home');
+    navigate({ route: 'home' });
   });
   return el('li', { children: [anchor] });
 };

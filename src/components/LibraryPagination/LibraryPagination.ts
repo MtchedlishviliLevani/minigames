@@ -1,5 +1,6 @@
 import './LibraryPagination.scss';
 import { TOTAL_PAGES } from '../../data/library';
+import { getState, navigate, onStateChange } from '../../router/router';
 import { el } from '../../utils/dom';
 import { Icon } from '../Icon/Icon';
 
@@ -22,7 +23,7 @@ const ArrowButton = (icon: 'chevron-left' | 'chevron-right', label: string): HTM
 
 export const LibraryPagination = (): HTMLElement => {
   const mobileQuery = window.matchMedia(MOBILE_QUERY);
-  let current = 1;
+  let current = Math.min(getState().page, TOTAL_PAGES);
 
   const pages = el('ul', { className: 'pagination__pages' });
   const previous = ArrowButton('chevron-left', 'Previous page');
@@ -31,8 +32,7 @@ export const LibraryPagination = (): HTMLElement => {
   const goTo = (page: number): void => {
     const target = Math.min(Math.max(page, 1), TOTAL_PAGES);
     if (target === current) return;
-    current = target;
-    render();
+    navigate({ page: target });
   };
 
   const PageItem = (page: number): HTMLLIElement => {
@@ -62,6 +62,12 @@ export const LibraryPagination = (): HTMLElement => {
     goTo(current + 1);
   });
   mobileQuery.addEventListener('change', render);
+
+  onStateChange((next, previous) => {
+    if (next.page === previous.page) return;
+    current = Math.min(Math.max(next.page, 1), TOTAL_PAGES);
+    render();
+  });
 
   render();
 

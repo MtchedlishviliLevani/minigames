@@ -1,5 +1,7 @@
 import './GameDetailsDialog.scss';
 import { GAME_DETAILS } from '../../data/gameDetails';
+import type { AppState } from '../../router/router';
+import { getState, navigate, onStateChange } from '../../router/router';
 import type { GameComment, GameFact, GameRecord } from '../../data/gameDetails';
 import { assetUrl } from '../../utils/assets';
 import { el } from '../../utils/dom';
@@ -260,7 +262,8 @@ const dialog = el('dialog', {
   children: [panel],
 });
 
-export function openGameDetails(): void {
+function showDialog(slug: string): void {
+  dialog.dataset.slug = slug;
   if (dialog.open) return;
   for (const reset of resetters) reset();
   dialog.showModal();
@@ -271,13 +274,31 @@ export function openGameDetails(): void {
   document.body.classList.add('is-locked');
 }
 
-export function closeGameDetails(): void {
+function hideDialog(): void {
   if (!dialog.open) return;
   dialog.classList.remove('is-open');
   document.body.classList.remove('is-locked');
   runAfterTransition(panel, () => {
     dialog.close();
+    delete dialog.dataset.slug;
   });
+}
+
+function syncDialog(next: AppState, previous: AppState): void {
+  if (next.game === previous.game) return;
+  if (next.game === null) {
+    hideDialog();
+  } else {
+    showDialog(next.game);
+  }
+}
+
+export function openGameDetails(slug: string): void {
+  navigate({ game: slug });
+}
+
+export function closeGameDetails(): void {
+  navigate({ game: null });
 }
 
 closeButton.addEventListener('click', closeGameDetails);
@@ -291,4 +312,15 @@ dialog.addEventListener('cancel', (event) => {
   closeGameDetails();
 });
 
-export const GameDetailsDialog = (): HTMLDialogElement => dialog;
+function openAfterMount(slug: string): void {
+  queueMicrotask(() => {
+    showDialog(slug);
+  });
+}
+
+export const GameDetailsDialog = (): HTMLDialogElement => {
+  const initial = getState();
+  onStateChange(syncDialog);
+  if (initial.game !== null) openAfterMount(initial.game);
+  return dialog;
+};
