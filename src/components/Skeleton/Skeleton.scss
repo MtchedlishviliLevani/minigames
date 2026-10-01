@@ -31,6 +31,10 @@
     animation: none;
   }
 
+  &[hidden] {
+    display: none;
+  }
+
   &--small {
     height: t.$skeleton-line-small;
   }
