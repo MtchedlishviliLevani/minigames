@@ -5,21 +5,13 @@ import { getState, navigate, onStateChange } from '../../router/router';
 import type { GameComment, GameFact, GameRecord } from '../../data/gameDetails';
 import { assetUrl } from '../../utils/assets';
 import { el } from '../../utils/dom';
+import { runAfterTransition } from '../../utils/transition';
 import { Icon } from '../Icon/Icon';
 
 const TEXTAREA_MAX_HEIGHT = 88;
 const AVATAR_VARIANTS = 3;
 
 const resetters: (() => void)[] = [];
-
-const runAfterTransition = (target: HTMLElement, callback: () => void): void => {
-  const finish = (event: TransitionEvent): void => {
-    if (event.target !== target) return;
-    target.removeEventListener('transitionend', finish);
-    callback();
-  };
-  target.addEventListener('transitionend', finish);
-};
 
 const Stat = (icon: 'star' | 'heart', value: string): HTMLSpanElement =>
   el('span', {

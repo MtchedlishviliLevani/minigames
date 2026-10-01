@@ -3,6 +3,7 @@ import type { AppState } from '../../router/router';
 import { getState, navigate, onStateChange } from '../../router/router';
 import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
+import { runAfterTransition } from '../../utils/transition';
 import { Icon } from '../Icon/Icon';
 import { AuthForm, focusAuthForm, resetAuthForm } from './AuthForm';
 
@@ -25,15 +26,6 @@ const MODES: AuthMode[] = ['login', 'register'];
 
 let currentMode: AuthMode = 'login';
 let switching = false;
-
-const runAfterTransition = (target: HTMLElement, callback: () => void): void => {
-  const finish = (event: TransitionEvent): void => {
-    if (event.target !== target) return;
-    target.removeEventListener('transitionend', finish);
-    callback();
-  };
-  target.addEventListener('transitionend', finish);
-};
 
 const Tab = (mode: AuthMode): HTMLButtonElement => {
   const tab = el('button', {
