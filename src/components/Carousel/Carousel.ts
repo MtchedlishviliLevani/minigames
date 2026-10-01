@@ -45,7 +45,11 @@ const GameCard = (game: Game): HTMLLIElement =>
           }),
           el('button', {
             className: 'game-card__open',
-            attrs: { type: 'button', 'aria-label': `Open details for ${game.name}` },
+            attrs: {
+              type: 'button',
+              'aria-label': `Open details for ${game.name}`,
+              'data-slug': game.slug,
+            },
           }),
         ],
       }),
@@ -179,7 +183,9 @@ export const Carousel = (): HTMLElement => {
   );
 
   track.addEventListener('click', (event) => {
-    if ((event.target as Element).closest('.game-card__open')) openGameDetails();
+    const trigger = (event.target as Element).closest<HTMLElement>('.game-card__open');
+    const slug = trigger?.dataset.slug;
+    if (slug !== undefined) openGameDetails(slug);
   });
 
   const move = (direction: 1 | -1): void => {

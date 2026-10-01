@@ -20,7 +20,9 @@ const DetailsButton = (game: Game): HTMLButtonElement => {
     attrs: { type: 'button', 'aria-label': `Details about ${game.name}` },
     text: 'Details',
   });
-  button.addEventListener('click', openGameDetails);
+  button.addEventListener('click', () => {
+    openGameDetails(game.slug);
+  });
   return button;
 };
 
