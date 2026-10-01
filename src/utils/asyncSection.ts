@@ -7,6 +7,7 @@ export interface AsyncSectionOptions<T> {
   skeleton: () => Node[];
   load: (signal: AbortSignal) => Promise<T>;
   render: (data: T) => Node[];
+  onData?: (data: T) => void;
   isEmpty?: (data: T) => boolean;
   emptyMessage?: string;
   errorMessage?: string;
@@ -40,6 +41,7 @@ export function createAsyncSection<T>(options: AsyncSectionOptions<T>): AsyncSec
     void load(request.signal)
       .then((data) => {
         if (request.signal.aborted) return;
+        options.onData?.(data);
         const isEmpty = options.isEmpty?.(data) ?? false;
         container.replaceChildren(
           ...(isEmpty

@@ -1,12 +1,16 @@
 import './LibraryFilters.scss';
-import { CATEGORIES, SORT_OPTIONS } from '../../data/library';
+import { defaultCategory, isKnownCategory, loadCategories } from '../../data/categories';
+import { SORT_OPTIONS } from '../../data/library';
 import { getState, navigate, onStateChange } from '../../router/router';
+import { createAsyncSection } from '../../utils/asyncSection';
 import type { Category, SortOption } from '../../types';
 import { el } from '../../utils/dom';
 import { enableDragScroll } from '../../utils/dragScroll';
 import { Icon } from '../Icon/Icon';
+import { Skeleton } from '../Skeleton/Skeleton';
 
 const SORT_PREFIX = 'Sort by: ';
+const SKELETON_CHIPS = 7;
 
 const sortLabel = (option: SortOption, textPrefix = ''): Node[] => {
   const nodes: Node[] = [
@@ -27,13 +31,12 @@ const Chip = (category: Category, isActive: boolean): HTMLButtonElement => {
 };
 
 const ChipRow = (): HTMLElement => {
-  const chips = CATEGORIES.map((category) => Chip(category, category.slug === getState().category));
-
   const row = el('div', {
     className: 'library-filters__chips',
     attrs: { role: 'group', 'aria-label': 'Filter games by category' },
-    children: chips,
   });
+
+  let chips: HTMLButtonElement[] = [];
 
   const showActive = (slug: string): void => {
     for (const chip of chips) {
@@ -51,6 +54,21 @@ const ChipRow = (): HTMLElement => {
 
   onStateChange((next, previous) => {
     if (next.category !== previous.category) showActive(next.category);
+  });
+
+  createAsyncSection<Category[]>({
+    container: row,
+    skeleton: () => Array.from({ length: SKELETON_CHIPS }, () => Skeleton('chip chip--skeleton')),
+    load: () => loadCategories(),
+    render: (categories) => {
+      const { category } = getState();
+      const active = isKnownCategory(category) ? category : defaultCategory();
+      chips = categories.map((item) => Chip(item, item.slug === active));
+      return chips;
+    },
+    isEmpty: (categories) => categories.length === 0,
+    emptyMessage: 'No categories are available right now.',
+    errorMessage: 'Categories could not be loaded.',
   });
 
   enableDragScroll(row);
