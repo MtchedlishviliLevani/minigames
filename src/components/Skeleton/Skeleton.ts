@@ -23,7 +23,3 @@ export function SkeletonText(lines: number, className = ''): HTMLElement {
     ),
   });
 }
-
-export function SkeletonList(count: number, item: (index: number) => Node): Node[] {
-  return Array.from({ length: count }, (_, index) => item(index));
-}

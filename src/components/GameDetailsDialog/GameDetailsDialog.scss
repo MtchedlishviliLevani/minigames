@@ -61,11 +61,20 @@
     height: t.$game-dialog-hero-height;
   }
 
+  &__cover-skeleton {
+    position: absolute;
+    inset: 0;
+  }
+
   &__cover {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+
+    &[hidden] {
+      display: none;
+    }
   }
 
   &__close {
@@ -393,6 +402,10 @@
   &__send-icon {
     width: t.$icon-size-medium;
     height: t.$icon-size-medium;
+  }
+
+  &__comments-state {
+    list-style: none;
   }
 
   &__comments {

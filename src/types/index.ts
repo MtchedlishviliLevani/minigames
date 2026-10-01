@@ -32,14 +32,6 @@ export interface Game {
   cardImage: string;
 }
 
-export interface MockResponse<T> {
-  data: T[];
-  meta: {
-    totalItems: number;
-    description: string;
-  };
-}
-
 export interface LeaderboardEntry {
   rank: number;
   playerName: string;
@@ -111,4 +103,9 @@ export interface GamesQuery {
   sort?: string;
   page?: number;
   limit?: number;
+}
+
+export interface GameCommentsPage {
+  comments: GameComment[];
+  totalComments: number;
 }
