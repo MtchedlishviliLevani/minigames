@@ -1,7 +1,8 @@
 import './LibraryGames.scss';
-import { assetUrl, getGames } from '../../api/mock-api';
+import { getGames } from '../../api/mock-api';
 import { categoryLabel, GAMES_PER_PAGE } from '../../data/library';
 import type { Game } from '../../types';
+import { assetUrl } from '../../utils/assets';
 import { el } from '../../utils/dom';
 import { formatCompact } from '../../utils/format';
 import { openGameDetails } from '../GameDetailsDialog/GameDetailsDialog';
