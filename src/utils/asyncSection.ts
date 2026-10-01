@@ -42,7 +42,9 @@ export function createAsyncSection<T>(options: AsyncSectionOptions<T>): AsyncSec
         if (request.signal.aborted) return;
         const isEmpty = options.isEmpty?.(data) ?? false;
         container.replaceChildren(
-          ...(isEmpty ? [EmptyState(options.emptyMessage ?? DEFAULT_EMPTY_MESSAGE)] : render(data))
+          ...(isEmpty
+            ? wrap(EmptyState(options.emptyMessage ?? DEFAULT_EMPTY_MESSAGE))
+            : render(data))
         );
       })
       .catch((error: unknown) => {
