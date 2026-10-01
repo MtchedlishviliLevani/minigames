@@ -98,7 +98,13 @@ const Bottom = (): HTMLElement =>
 export const Footer = (): HTMLElement =>
   el('footer', {
     className: 'footer',
+    attrs: { 'aria-labelledby': 'footer-title' },
     children: [
+      el('h2', {
+        className: 'visually-hidden',
+        attrs: { id: 'footer-title' },
+        text: 'Site footer',
+      }),
       el('div', {
         className: 'container',
         children: [

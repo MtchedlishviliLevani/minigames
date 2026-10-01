@@ -1,6 +1,8 @@
 import type { IconName } from '../components/Icon/Icon';
 
-export type Route = 'home' | 'library';
+export type Route = 'home' | 'library' | 'not-found';
+
+export type KnownRoute = Exclude<Route, 'not-found'>;
 
 export interface NavLink {
   label: string;
