@@ -1,5 +1,5 @@
 import './Leaderboard.scss';
-import { getLeaderboard } from '../../api/mock-api';
+import { getLeaderboard } from '../../api/games';
 import type { LeaderboardEntry } from '../../types';
 import { createAsyncSection } from '../../utils/asyncSection';
 import { el } from '../../utils/dom';
@@ -132,7 +132,7 @@ export const Leaderboard = (): HTMLElement => {
   createAsyncSection<LeaderboardEntry[]>({
     container: tbody,
     skeleton: () => Array.from({ length: SKELETON_ROWS }, () => SkeletonRow()),
-    load: () => getLeaderboard(),
+    load: (signal) => getLeaderboard(signal),
     render: (entries) => entries.map(Row),
     isEmpty: (entries) => entries.length === 0,
     emptyMessage: 'No players have made the leaderboard yet.',
