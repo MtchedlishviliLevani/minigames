@@ -32,14 +32,6 @@ export interface Game {
   cardImage: string;
 }
 
-export interface MockResponse<T> {
-  data: T[];
-  meta: {
-    totalItems: number;
-    description: string;
-  };
-}
-
 export interface LeaderboardEntry {
   rank: number;
   playerName: string;
