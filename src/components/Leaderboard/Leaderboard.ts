@@ -1,8 +1,10 @@
 import './Leaderboard.scss';
 import { getLeaderboard } from '../../api/mock-api';
 import type { LeaderboardEntry } from '../../types';
+import { createAsyncSection } from '../../utils/asyncSection';
 import { el } from '../../utils/dom';
 import { formatCompact, formatNumber, initials } from '../../utils/format';
+import { Skeleton } from '../Skeleton/Skeleton';
 
 type ColumnKey = 'rank' | 'player' | 'gamesPlayed' | 'totalScore' | 'streakDays' | 'favoriteGame';
 
@@ -26,6 +28,7 @@ const COLUMNS: Column[] = [
 
 const AVATAR_VARIANTS = 5;
 const LEADERBOARD_TITLE = 'Top Players This Week';
+const SKELETON_ROWS = 5;
 
 const cellClass = (column: Column): string => {
   let className = `leaderboard__cell leaderboard__cell--${column.key}`;
@@ -103,30 +106,39 @@ const Row = (entry: LeaderboardEntry): HTMLTableRowElement =>
     children: COLUMNS.map((column) => Cell(column, entry)),
   });
 
-const ErrorRow = (): HTMLTableRowElement =>
+const SkeletonRow = (): HTMLTableRowElement =>
+  el('tr', {
+    className: 'leaderboard__row',
+    children: COLUMNS.map((column) =>
+      el('td', { className: cellClass(column), children: [Skeleton()] })
+    ),
+  });
+
+const StateRow = (state: HTMLElement): Node[] => [
   el('tr', {
     children: [
       el('td', {
-        className: 'leaderboard__error',
+        className: 'leaderboard__state',
         attrs: { colspan: String(COLUMNS.length) },
-        text: 'Leaderboard could not be loaded.',
+        children: [state],
       }),
     ],
-  });
+  }),
+];
 
 export const Leaderboard = (): HTMLElement => {
-  const tbody = el('tbody', { attrs: { 'aria-busy': 'true' } });
+  const tbody = el('tbody');
 
-  getLeaderboard()
-    .then((entries) => {
-      tbody.append(...entries.map(Row));
-    })
-    .catch(() => {
-      tbody.append(ErrorRow());
-    })
-    .finally(() => {
-      tbody.removeAttribute('aria-busy');
-    });
+  createAsyncSection<LeaderboardEntry[]>({
+    container: tbody,
+    skeleton: () => Array.from({ length: SKELETON_ROWS }, () => SkeletonRow()),
+    load: () => getLeaderboard(),
+    render: (entries) => entries.map(Row),
+    isEmpty: (entries) => entries.length === 0,
+    emptyMessage: 'No players have made the leaderboard yet.',
+    errorMessage: 'The leaderboard could not be loaded.',
+    wrap: StateRow,
+  });
 
   const headRow = el('tr', {
     children: COLUMNS.map((column) =>

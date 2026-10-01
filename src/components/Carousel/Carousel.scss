@@ -29,9 +29,9 @@
     }
   }
 
-  &__error {
-    color: t.$color-error;
-    font-size: t.$font-size-body-medium;
+  &__state {
+    flex: 1;
+    min-width: 0;
   }
 
   &__item {

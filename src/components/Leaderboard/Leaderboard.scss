@@ -112,10 +112,8 @@
     }
   }
 
-  &__error {
+  &__state {
     padding: t.$size-2;
-    color: t.$color-error;
-    text-align: center;
   }
 
   &__row {
