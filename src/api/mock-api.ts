@@ -1,4 +1,4 @@
-import type { Game, LeaderboardEntry, MockResponse } from '../types';
+import type { Game, MockResponse } from '../types';
 
 type SeedGame = Game & { featured: boolean };
 
@@ -15,15 +15,5 @@ async function fetchJson<T>(resource: string): Promise<T> {
 
 export async function getGames(): Promise<SeedGame[]> {
   const { data } = await fetchJson<MockResponse<SeedGame>>('all-games-seed');
-  return data;
-}
-
-export async function getFeaturedGames(): Promise<SeedGame[]> {
-  const games = await getGames();
-  return games.filter((game) => game.featured);
-}
-
-export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
-  const { data } = await fetchJson<MockResponse<LeaderboardEntry>>('leaderboard');
   return data;
 }
