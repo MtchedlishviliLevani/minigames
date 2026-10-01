@@ -1,4 +1,5 @@
-import { CATEGORIES, DEFAULT_CATEGORY, DEFAULT_SORT, SORT_OPTIONS } from '../data/library';
+import { FALLBACK_CATEGORY } from '../data/categories';
+import { DEFAULT_SORT, SORT_OPTIONS } from '../data/library';
 import type { AuthMode, Route } from '../types';
 
 export interface AppState {
@@ -23,7 +24,7 @@ const listeners = new Set<StateListener>();
 
 let state: AppState = {
   route: 'home',
-  category: DEFAULT_CATEGORY,
+  category: FALLBACK_CATEGORY,
   sort: DEFAULT_SORT,
   page: 1,
   game: null,
@@ -40,8 +41,7 @@ function parseRoute(pathname: string): Route {
 }
 
 function parseCategory(value: string | null): string {
-  if (value !== null && CATEGORIES.some((category) => category.slug === value)) return value;
-  return DEFAULT_CATEGORY;
+  return value === null || value === '' ? FALLBACK_CATEGORY : value;
 }
 
 function parseSort(value: string | null): string {

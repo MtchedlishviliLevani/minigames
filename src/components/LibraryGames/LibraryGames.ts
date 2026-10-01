@@ -1,12 +1,17 @@
 import './LibraryGames.scss';
-import { getGames } from '../../api/mock-api';
-import { categoryLabel, GAMES_PER_PAGE } from '../../data/library';
+import { getGames } from '../../api/games';
+import { categoryLabel, FALLBACK_CATEGORY, loadCategories } from '../../data/categories';
+import { GAMES_PER_PAGE } from '../../data/library';
+import { getState, navigate, onStateChange } from '../../router/router';
+import type { GamesPage } from '../../types';
 import type { Game } from '../../types';
 import { assetUrl } from '../../utils/assets';
+import { createAsyncSection } from '../../utils/asyncSection';
 import { el } from '../../utils/dom';
 import { formatCompact } from '../../utils/format';
 import { openGameDetails } from '../GameDetailsDialog/GameDetailsDialog';
 import { Icon } from '../Icon/Icon';
+import { Skeleton, SkeletonText } from '../Skeleton/Skeleton';
 
 const Stat = (iconName: 'star' | 'heart', value: string): HTMLSpanElement =>
   el('span', {
@@ -63,24 +68,68 @@ const GameTile = (game: Game): HTMLLIElement =>
     ],
   });
 
-export const LibraryGames = (): HTMLElement => {
-  const list = el('ul', {
-    className: 'library-games__list',
-    attrs: { 'aria-busy': 'true' },
+const SkeletonTile = (): HTMLLIElement =>
+  el('li', {
+    children: [
+      el('div', {
+        className: 'game-tile',
+        children: [
+          Skeleton('game-tile__media skeleton--fill'),
+          el('div', {
+            className: 'game-tile__content',
+            children: [
+              el('div', {
+                className: 'game-tile__heading',
+                children: [Skeleton('skeleton--large')],
+              }),
+              SkeletonText(3),
+            ],
+          }),
+        ],
+      }),
+    ],
   });
 
-  getGames()
-    .then((games) => {
-      list.replaceChildren(...games.slice(0, GAMES_PER_PAGE).map((game) => GameTile(game)));
-    })
-    .catch(() => {
-      list.append(
-        el('li', { className: 'library-games__error', text: 'Games could not be loaded.' })
-      );
-    })
-    .finally(() => {
-      list.removeAttribute('aria-busy');
-    });
+export interface LibraryGamesOptions {
+  onLoaded: (page: number, totalPages: number) => void;
+}
+
+export const LibraryGames = ({ onLoaded }: LibraryGamesOptions): HTMLElement => {
+  const list = el('ul', { className: 'library-games__list' });
+
+  const section = createAsyncSection<GamesPage>({
+    container: list,
+    skeleton: () => Array.from({ length: GAMES_PER_PAGE }, () => SkeletonTile()),
+    load: async (signal) => {
+      const categories = await loadCategories().catch(() => []);
+      const { category, sort, page } = getState();
+      const known = categories.some((item) => item.slug === category);
+      const fallback = categories.find((item) => item.isDefault)?.slug ?? FALLBACK_CATEGORY;
+      const resolved = categories.length === 0 || known ? category : fallback;
+      if (resolved !== category) navigate({ category: resolved }, { replace: true });
+      return getGames({ category: resolved, sort, page, limit: GAMES_PER_PAGE }, signal);
+    },
+    onData: (result) => {
+      onLoaded(result.page, result.totalPages);
+    },
+    render: (result) => result.games.map((game) => GameTile(game)),
+    isEmpty: (result) => result.games.length === 0,
+    emptyMessage: 'No games match the selected filters.',
+    errorMessage: 'Games could not be loaded.',
+    wrap: (state) => [el('li', { className: 'library-games__state', children: [state] })],
+  });
+
+  onStateChange((next, previous) => {
+    if (next.route !== 'library') return;
+    if (
+      next.category === previous.category &&
+      next.sort === previous.sort &&
+      next.page === previous.page
+    ) {
+      return;
+    }
+    section.reload();
+  });
 
   return el('section', {
     className: 'library-games',

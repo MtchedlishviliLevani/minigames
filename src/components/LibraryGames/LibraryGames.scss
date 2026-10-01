@@ -20,8 +20,8 @@
     }
   }
 
-  &__error {
-    color: t.$color-on-bg;
+  &__state {
+    grid-column: 1 / -1;
   }
 }
 
