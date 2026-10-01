@@ -112,3 +112,8 @@ export interface GamesQuery {
   page?: number;
   limit?: number;
 }
+
+export interface GameCommentsPage {
+  comments: GameComment[];
+  totalComments: number;
+}

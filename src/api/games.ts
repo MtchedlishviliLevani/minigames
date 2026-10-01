@@ -2,6 +2,7 @@ import type {
   Category,
   Game,
   GameComment,
+  GameCommentsPage,
   GameDetails,
   GamesPage,
   GamesQuery,
@@ -16,6 +17,11 @@ interface ListResponse<T, M = unknown> {
 
 interface ItemResponse<T> {
   data: T;
+}
+
+interface CommentsMeta {
+  totalComments: number;
+  returnedCount: number;
 }
 
 interface GamesMeta {
@@ -52,13 +58,18 @@ export async function getGameDetails(slug: string, signal?: AbortSignal): Promis
   return data;
 }
 
-export async function getGameComments(slug: string, signal?: AbortSignal): Promise<GameComment[]> {
-  const { data } = await request<ListResponse<GameComment>>(
+export const COMMENTS_LIMIT = 3;
+
+export async function getGameComments(
+  slug: string,
+  signal?: AbortSignal
+): Promise<GameCommentsPage> {
+  const { data, meta } = await request<ListResponse<GameComment, CommentsMeta>>(
     `/games/${encodeURIComponent(slug)}/comments`,
-    {},
+    { limit: COMMENTS_LIMIT, sort: 'newest' },
     signal
   );
-  return data;
+  return { comments: data, totalComments: meta.totalComments };
 }
 
 export async function getCategories(signal?: AbortSignal): Promise<Category[]> {
