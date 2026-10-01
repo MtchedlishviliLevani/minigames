@@ -283,8 +283,7 @@ const SkeletonContent = (): Node[] => [
   }),
 ];
 
-const cover = el('img', { className: 'game-dialog__cover', attrs: { alt: '', src: '' } });
-cover.hidden = true;
+const cover = el('img', { className: 'game-dialog__cover', attrs: { alt: '' } });
 
 cover.addEventListener('error', () => {
   const fallback = cover.dataset.fallback;
@@ -303,7 +302,7 @@ const closeButton = el('button', {
 
 const hero = el('div', {
   className: 'game-dialog__hero',
-  children: [coverSkeleton, cover, closeButton],
+  children: [coverSkeleton, closeButton],
 });
 
 const body = el('div', { className: 'game-dialog__body' });
@@ -319,7 +318,7 @@ let section: AsyncSection | undefined;
 let currentSlug = '';
 
 function setCoverLoading(loading: boolean): void {
-  cover.hidden = loading;
+  if (loading) cover.remove();
   coverSkeleton.hidden = !loading;
   if (loading) {
     coverSkeleton.setAttribute('aria-hidden', 'true');
@@ -332,6 +331,7 @@ function showCover(details: GameDetails): void {
   cover.dataset.fallback = cardImageUrl(details.slug);
   cover.alt = details.name;
   cover.src = assetUrl(details.heroImage);
+  if (!cover.isConnected) hero.insertBefore(cover, closeButton);
   setCoverLoading(false);
 }
 
