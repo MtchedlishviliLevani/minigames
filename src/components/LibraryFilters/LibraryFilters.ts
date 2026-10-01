@@ -1,5 +1,6 @@
 import './LibraryFilters.scss';
-import { CATEGORIES, DEFAULT_CATEGORY, DEFAULT_SORT, SORT_OPTIONS } from '../../data/library';
+import { CATEGORIES, SORT_OPTIONS } from '../../data/library';
+import { getState, navigate, onStateChange } from '../../router/router';
 import type { Category, SortOption } from '../../types';
 import { el } from '../../utils/dom';
 import { enableDragScroll } from '../../utils/dragScroll';
@@ -26,14 +27,7 @@ const Chip = (category: Category, isActive: boolean): HTMLButtonElement => {
 };
 
 const ChipRow = (): HTMLElement => {
-  let activeChip: HTMLButtonElement | null = null;
-
-  const chips = CATEGORIES.map((category) => {
-    const isActive = category.slug === DEFAULT_CATEGORY;
-    const chip = Chip(category, isActive);
-    if (isActive) activeChip = chip;
-    return chip;
-  });
+  const chips = CATEGORIES.map((category) => Chip(category, category.slug === getState().category));
 
   const row = el('div', {
     className: 'library-filters__chips',
@@ -41,14 +35,22 @@ const ChipRow = (): HTMLElement => {
     children: chips,
   });
 
+  const showActive = (slug: string): void => {
+    for (const chip of chips) {
+      const isActive = chip.dataset.slug === slug;
+      chip.classList.toggle('chip--active', isActive);
+      chip.setAttribute('aria-pressed', String(isActive));
+    }
+  };
+
   row.addEventListener('click', (event) => {
     const chip = (event.target as Element).closest<HTMLButtonElement>('.chip');
-    if (!chip || chip === activeChip) return;
-    activeChip?.classList.remove('chip--active');
-    activeChip?.setAttribute('aria-pressed', 'false');
-    chip.classList.add('chip--active');
-    chip.setAttribute('aria-pressed', 'true');
-    activeChip = chip;
+    const slug = chip?.dataset.slug;
+    if (slug !== undefined) navigate({ category: slug });
+  });
+
+  onStateChange((next, previous) => {
+    if (next.category !== previous.category) showActive(next.category);
   });
 
   enableDragScroll(row);
@@ -57,7 +59,7 @@ const ChipRow = (): HTMLElement => {
 
 const SortControl = (): HTMLElement => {
   let selected: SortOption =
-    SORT_OPTIONS.find((option) => option.id === DEFAULT_SORT) ?? SORT_OPTIONS[0];
+    SORT_OPTIONS.find((option) => option.id === getState().sort) ?? SORT_OPTIONS[0];
   let isOpen = false;
 
   const label = el('span', {
@@ -108,20 +110,24 @@ const SortControl = (): HTMLElement => {
     toggle.classList.toggle('sort__toggle--open', open);
   };
 
-  const select = (option: HTMLElement): void => {
-    const id = option.dataset.id;
+  const showSelected = (id: string): void => {
     const match = SORT_OPTIONS.find((item) => item.id === id);
     if (!match) return;
     selected = match;
     label.replaceChildren(...sortLabel(match, SORT_PREFIX));
     toggle.setAttribute('aria-label', SORT_PREFIX + match.label);
     for (const item of options) {
-      const isSelected = item === option;
+      const isSelected = item.dataset.id === id;
       item.classList.toggle('sort__option--selected', isSelected);
       item.setAttribute('aria-selected', String(isSelected));
     }
+  };
+
+  const select = (option: HTMLElement): void => {
+    const id = option.dataset.id;
     setOpen(false);
     toggle.focus();
+    if (id !== undefined && id !== selected.id) navigate({ sort: id });
   };
 
   toggle.addEventListener('click', () => {
@@ -150,6 +156,10 @@ const SortControl = (): HTMLElement => {
     const index = options.findIndex((item) => item === option);
     const next = options[(index + step + options.length) % options.length];
     next?.focus();
+  });
+
+  onStateChange((next, previous) => {
+    if (next.sort !== previous.sort) showSelected(next.sort);
   });
 
   const sort = el('div', { className: 'sort', children: [toggle, menu] });
