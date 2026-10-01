@@ -4,13 +4,13 @@ export const LIBRARY_TITLE = 'Game Library';
 export const LIBRARY_SUBTITLE = 'Browse our collection of casual mini-games';
 
 export const CATEGORIES: Category[] = [
-  { slug: 'all', label: 'All Games' },
-  { slug: 'puzzle', label: 'Puzzle' },
-  { slug: 'card', label: 'Card' },
-  { slug: 'match', label: 'Match' },
-  { slug: 'farm', label: 'Farm' },
-  { slug: 'strategy', label: 'Strategy' },
-  { slug: 'arcade', label: 'Arcade' },
+  { slug: 'all', label: 'All Games', isDefault: true },
+  { slug: 'puzzle', label: 'Puzzle', isDefault: false },
+  { slug: 'card', label: 'Card', isDefault: false },
+  { slug: 'match', label: 'Match', isDefault: false },
+  { slug: 'farm', label: 'Farm', isDefault: false },
+  { slug: 'strategy', label: 'Strategy', isDefault: false },
+  { slug: 'arcade', label: 'Arcade', isDefault: false },
 ];
 
 export const DEFAULT_CATEGORY = 'all';

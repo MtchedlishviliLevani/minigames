@@ -1,6 +1,7 @@
 import './Carousel.scss';
-import { assetUrl, getFeaturedGames } from '../../api/mock-api';
+import { getFeaturedGames } from '../../api/mock-api';
 import type { Game } from '../../types';
+import { assetUrl } from '../../utils/assets';
 import { el } from '../../utils/dom';
 import { formatCompact } from '../../utils/format';
 import { openGameDetails } from '../GameDetailsDialog/GameDetailsDialog';

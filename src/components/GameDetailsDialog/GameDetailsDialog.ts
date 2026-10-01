@@ -1,7 +1,7 @@
 import './GameDetailsDialog.scss';
-import { assetUrl } from '../../api/mock-api';
 import { GAME_DETAILS } from '../../data/gameDetails';
 import type { GameComment, GameFact, GameRecord } from '../../data/gameDetails';
+import { assetUrl } from '../../utils/assets';
 import { el } from '../../utils/dom';
 import { Icon } from '../Icon/Icon';
 
