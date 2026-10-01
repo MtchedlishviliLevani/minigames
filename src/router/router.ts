@@ -1,6 +1,6 @@
 import { FALLBACK_CATEGORY } from '../data/categories';
 import { DEFAULT_SORT, SORT_OPTIONS } from '../data/library';
-import type { AuthMode, Route } from '../types';
+import type { AuthMode, KnownRoute, Route } from '../types';
 
 export interface AppState {
   route: Route;
@@ -17,7 +17,8 @@ export interface NavigateOptions {
 
 type StateListener = (state: AppState, previous: AppState) => void;
 
-const ROUTE_PATHS: Record<Route, string> = { home: '/', library: '/library' };
+const ROUTE_PATHS: Record<KnownRoute, string> = { home: '/', library: '/library' };
+const HOME_ALIAS = '/home';
 const AUTH_MODES: AuthMode[] = ['login', 'register'];
 
 const listeners = new Set<StateListener>();
@@ -37,7 +38,14 @@ function normalizePath(pathname: string): string {
 }
 
 function parseRoute(pathname: string): Route {
-  return normalizePath(pathname) === ROUTE_PATHS.library ? 'library' : 'home';
+  const path = normalizePath(pathname);
+  if (path === ROUTE_PATHS.library) return 'library';
+  if (path === ROUTE_PATHS.home || path === HOME_ALIAS) return 'home';
+  return 'not-found';
+}
+
+function routePath(route: Route): string {
+  return route === 'not-found' ? window.location.pathname : ROUTE_PATHS[route];
 }
 
 function parseCategory(value: string | null): string {
@@ -80,8 +88,9 @@ function buildUrl(next: AppState): string {
   }
   if (next.game !== null) params.set('game', next.game);
   if (next.auth !== null) params.set('auth', next.auth);
+  const path = routePath(next.route);
   const query = params.toString();
-  return query === '' ? ROUTE_PATHS[next.route] : `${ROUTE_PATHS[next.route]}?${query}`;
+  return query === '' ? path : `${path}?${query}`;
 }
 
 function resolve(patch: Partial<AppState>): AppState {

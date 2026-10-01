@@ -5,6 +5,7 @@ import { Header } from './components/Header/Header';
 import { MobileMenu } from './components/MobileMenu/MobileMenu';
 import { HomePage } from './pages/HomePage';
 import { LibraryPage } from './pages/LibraryPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { getRoute, onRouteChange } from './router/router';
 import type { Route } from './types';
 import { el } from './utils/dom';
@@ -12,6 +13,7 @@ import { el } from './utils/dom';
 const PAGES: Record<Route, () => Node[]> = {
   home: HomePage,
   library: LibraryPage,
+  'not-found': NotFoundPage,
 };
 
 const rendered = new Map<Route, Node[]>();

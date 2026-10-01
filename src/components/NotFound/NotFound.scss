@@ -1,0 +1,51 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.not-found {
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: t.$size-2;
+    padding-block: t.$size-10;
+    text-align: center;
+
+    @include bp.tablet-up {
+      padding-block: t.$size-13;
+    }
+  }
+
+  &__code {
+    font-size: t.$font-size-display-medium;
+    font-weight: t.$font-weight-extra-bold;
+    line-height: t.$line-height-tight;
+    color: t.$color-primary-high;
+
+    @include bp.tablet-up {
+      font-size: t.$font-size-display-large;
+    }
+  }
+
+  &__title {
+    font-size: t.$font-size-headline-medium;
+    font-weight: t.$font-weight-bold;
+    line-height: t.$line-height-snug;
+    color: t.$color-on-primary;
+
+    @include bp.tablet-up {
+      font-size: t.$font-size-headline-large;
+    }
+  }
+
+  &__message {
+    max-width: t.$hero-card-max-width;
+    font-size: t.$font-size-body-medium;
+    line-height: t.$line-height-base;
+    color: t.$color-on-bg;
+  }
+
+  &__action {
+    margin-top: t.$size-2;
+    text-decoration: none;
+  }
+}
