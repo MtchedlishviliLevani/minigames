@@ -14,11 +14,21 @@ const PAGES: Record<Route, () => Node[]> = {
   library: LibraryPage,
 };
 
+const rendered = new Map<Route, Node[]>();
+
+function pageNodes(route: Route): Node[] {
+  const cached = rendered.get(route);
+  if (cached !== undefined) return cached;
+  const nodes = PAGES[route]();
+  rendered.set(route, nodes);
+  return nodes;
+}
+
 export function mountApp(root: HTMLElement): void {
   const main = el('main', { className: 'main', attrs: { id: 'main' } });
 
   const renderPage = (route: Route): void => {
-    main.replaceChildren(...PAGES[route]());
+    main.replaceChildren(...pageNodes(route));
     window.scrollTo({ top: 0 });
   };
 

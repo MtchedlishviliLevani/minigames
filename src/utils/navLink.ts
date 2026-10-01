@@ -22,8 +22,10 @@ export function createNavLink(
   if (isActive) anchor.setAttribute('aria-current', 'page');
 
   anchor.addEventListener('click', (event) => {
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
-    navigate(link.route ?? 'home');
+    navigate({ route: link.route ?? 'home' });
     onNavigate?.();
   });
 
