@@ -1,5 +1,5 @@
 import './Carousel.scss';
-import { getFeaturedGames } from '../../api/mock-api';
+import { getFeaturedGames } from '../../api/games';
 import type { Game } from '../../types';
 import { assetUrl } from '../../utils/assets';
 import { createAsyncSection } from '../../utils/asyncSection';
@@ -213,7 +213,7 @@ export const Carousel = (): HTMLElement => {
   createAsyncSection<Game[]>({
     container: track,
     skeleton: resetToLoading,
-    load: () => getFeaturedGames(),
+    load: (signal) => getFeaturedGames(signal),
     render: (featured) => {
       items = featured.map((game) => GameCard(game));
       for (const item of items) sizeWatcher.observe(item);
