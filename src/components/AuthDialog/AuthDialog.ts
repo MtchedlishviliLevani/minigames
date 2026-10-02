@@ -1,6 +1,9 @@
 import './AuthDialog.scss';
+import type { AppState } from '../../router/router';
+import { getState, navigate, onStateChange } from '../../router/router';
 import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
+import { runAfterTransition } from '../../utils/transition';
 import { Icon } from '../Icon/Icon';
 import { AuthForm, focusAuthForm, resetAuthForm } from './AuthForm';
 
@@ -24,15 +27,6 @@ const MODES: AuthMode[] = ['login', 'register'];
 let currentMode: AuthMode = 'login';
 let switching = false;
 
-const runAfterTransition = (target: HTMLElement, callback: () => void): void => {
-  const finish = (event: TransitionEvent): void => {
-    if (event.target !== target) return;
-    target.removeEventListener('transitionend', finish);
-    callback();
-  };
-  target.addEventListener('transitionend', finish);
-};
-
 const Tab = (mode: AuthMode): HTMLButtonElement => {
   const tab = el('button', {
     className: 'auth-dialog__tab',
@@ -45,7 +39,7 @@ const Tab = (mode: AuthMode): HTMLButtonElement => {
     text: COPY[mode].tab,
   });
   tab.addEventListener('click', () => {
-    requestMode(mode);
+    navigate({ auth: mode });
   });
   return tab;
 };
@@ -62,8 +56,8 @@ const tabs: Record<AuthMode, HTMLButtonElement> = {
   register: Tab('register'),
 };
 const forms: Record<AuthMode, HTMLElement> = {
-  login: AuthForm({ mode: 'login', onSubmit: showStatus, onSwitch: requestMode }),
-  register: AuthForm({ mode: 'register', onSubmit: showStatus, onSwitch: requestMode }),
+  login: AuthForm({ mode: 'login', onSubmit: showStatus, onSwitch: requestAuthMode }),
+  register: AuthForm({ mode: 'register', onSubmit: showStatus, onSwitch: requestAuthMode }),
 };
 
 const body = el('div', {
@@ -132,7 +126,11 @@ function showStatus(mode: AuthMode): void {
   status.textContent = COPY[mode].done;
 }
 
-export function openAuthDialog(mode: AuthMode = 'login'): void {
+function requestAuthMode(mode: AuthMode): void {
+  navigate({ auth: mode });
+}
+
+function showDialog(mode: AuthMode): void {
   applyMode(mode);
   status.textContent = '';
   if (!dialog.open) {
@@ -145,7 +143,7 @@ export function openAuthDialog(mode: AuthMode = 'login'): void {
   focusAuthForm(forms[mode]);
 }
 
-export function closeAuthDialog(): void {
+function hideDialog(): void {
   if (!dialog.open) return;
   dialog.classList.remove('is-open');
   document.body.classList.remove('is-locked');
@@ -154,6 +152,25 @@ export function closeAuthDialog(): void {
     status.textContent = '';
     for (const mode of MODES) resetAuthForm(forms[mode]);
   });
+}
+
+function syncDialog(next: AppState, previous: AppState): void {
+  if (next.auth === previous.auth) return;
+  if (next.auth === null) {
+    hideDialog();
+  } else if (previous.auth === null) {
+    showDialog(next.auth);
+  } else {
+    requestMode(next.auth);
+  }
+}
+
+export function openAuthDialog(mode: AuthMode = 'login'): void {
+  navigate({ auth: mode });
+}
+
+export function closeAuthDialog(): void {
+  navigate({ auth: null });
 }
 
 closeButton.addEventListener('click', closeAuthDialog);
@@ -165,7 +182,16 @@ dialog.addEventListener('cancel', (event) => {
   closeAuthDialog();
 });
 
+function openAfterMount(mode: AuthMode): void {
+  queueMicrotask(() => {
+    showDialog(mode);
+  });
+}
+
 export const AuthDialog = (): HTMLDialogElement => {
-  applyMode('login');
+  const initial = getState();
+  applyMode(initial.auth ?? 'login');
+  onStateChange(syncDialog);
+  if (initial.auth !== null) openAfterMount(initial.auth);
   return dialog;
 };

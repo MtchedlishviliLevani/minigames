@@ -187,3 +187,9 @@
     visibility: visible;
   }
 }
+
+.chip--skeleton {
+  width: t.$size-12;
+  height: t.$control-size-small;
+  border-radius: t.$corner-full;
+}

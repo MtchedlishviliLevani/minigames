@@ -61,6 +61,15 @@
     height: t.$game-dialog-hero-height;
   }
 
+  &__cover-skeleton {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__panel:has(.data-state) &__cover-skeleton {
+    display: none;
+  }
+
   &__cover {
     display: block;
     width: 100%;
@@ -393,6 +402,10 @@
   &__send-icon {
     width: t.$icon-size-medium;
     height: t.$icon-size-medium;
+  }
+
+  &__comments-state {
+    list-style: none;
   }
 
   &__comments {

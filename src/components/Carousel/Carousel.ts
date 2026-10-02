@@ -1,16 +1,20 @@
 import './Carousel.scss';
-import { assetUrl, getFeaturedGames } from '../../api/mock-api';
+import { getFeaturedGames } from '../../api/games';
 import type { Game } from '../../types';
+import { assetUrl } from '../../utils/assets';
+import { createAsyncSection } from '../../utils/asyncSection';
 import { el } from '../../utils/dom';
 import { formatCompact } from '../../utils/format';
 import { openGameDetails } from '../GameDetailsDialog/GameDetailsDialog';
 import { Icon } from '../Icon/Icon';
+import { Skeleton } from '../Skeleton/Skeleton';
 
 const AUTOPLAY_MS = 4000;
 const SWIPE_THRESHOLD = 40;
 const INFO_MIN_WIDTH = 288;
 
 const SLOTS = ['featured', 'regular', 'peek'] as const;
+const SKELETON_SLOTS = ['peek', 'regular', 'featured', 'regular', 'peek'] as const;
 
 const Stat = (iconName: 'star' | 'heart', value: string): HTMLSpanElement =>
   el('span', {
@@ -44,11 +48,21 @@ const GameCard = (game: Game): HTMLLIElement =>
           }),
           el('button', {
             className: 'game-card__open',
-            attrs: { type: 'button', 'aria-label': `Open details for ${game.name}` },
+            attrs: {
+              type: 'button',
+              'aria-label': `Open details for ${game.name}`,
+              'data-slug': game.slug,
+            },
           }),
         ],
       }),
     ],
+  });
+
+const SkeletonCard = (slot: (typeof SKELETON_SLOTS)[number]): HTMLLIElement =>
+  el('li', {
+    className: `carousel__item carousel__item--${slot}`,
+    children: [el('div', { className: 'game-card', children: [Skeleton('skeleton--fill')] })],
   });
 
 const ControlButton = (
@@ -75,7 +89,7 @@ const circularOffset = (index: number, centre: number, total: number): number =>
 export const Carousel = (): HTMLElement => {
   const track = el('ul', {
     className: 'carousel__track',
-    attrs: { 'aria-label': 'New games', 'aria-busy': 'true' },
+    attrs: { 'aria-label': 'New games' },
   });
 
   let items: HTMLLIElement[] = [];
@@ -178,7 +192,9 @@ export const Carousel = (): HTMLElement => {
   );
 
   track.addEventListener('click', (event) => {
-    if ((event.target as Element).closest('.game-card__open')) openGameDetails();
+    const trigger = (event.target as Element).closest<HTMLElement>('.game-card__open');
+    const slug = trigger?.dataset.slug;
+    if (slug !== undefined) openGameDetails(slug);
   });
 
   const move = (direction: 1 | -1): void => {
@@ -186,20 +202,30 @@ export const Carousel = (): HTMLElement => {
     startTimer(AUTOPLAY_MS);
   };
 
-  getFeaturedGames()
-    .then((featured) => {
+  const resetToLoading = (): Node[] => {
+    stopTimer();
+    for (const item of items) sizeWatcher.unobserve(item);
+    items = [];
+    centre = 0;
+    return SKELETON_SLOTS.map((slot) => SkeletonCard(slot));
+  };
+
+  createAsyncSection<Game[]>({
+    container: track,
+    skeleton: resetToLoading,
+    load: (signal) => getFeaturedGames(signal),
+    render: (featured) => {
       items = featured.map((game) => GameCard(game));
-      track.replaceChildren(...items);
       for (const item of items) sizeWatcher.observe(item);
       layout();
       startTimer(AUTOPLAY_MS);
-    })
-    .catch(() => {
-      track.append(el('li', { className: 'carousel__error', text: 'Games could not be loaded.' }));
-    })
-    .finally(() => {
-      track.removeAttribute('aria-busy');
-    });
+      return items;
+    },
+    isEmpty: (featured) => featured.length === 0,
+    emptyMessage: 'There are no new games to show right now.',
+    errorMessage: 'New games could not be loaded.',
+    wrap: (state) => [el('li', { className: 'carousel__state', children: [state] })],
+  });
 
   const header = el('div', {
     className: 'section__header',

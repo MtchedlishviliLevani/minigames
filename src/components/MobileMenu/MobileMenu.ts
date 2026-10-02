@@ -4,6 +4,7 @@ import { getRoute, onRouteChange } from '../../router/router';
 import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
 import { createNavLink, setNavLinkActive } from '../../utils/navLink';
+import { runAfterTransition } from '../../utils/transition';
 import { openAuthDialog } from '../AuthDialog/AuthDialog';
 import { setBurgerOpen } from '../Header/Header';
 import { Icon } from '../Icon/Icon';
@@ -33,12 +34,9 @@ export function closeMenu(): void {
   isOpen = false;
   const drawer = menu;
   drawer.classList.remove('is-open');
-  const hideDrawer = (event: TransitionEvent): void => {
-    if (event.target !== drawer) return;
+  runAfterTransition(drawer, () => {
     drawer.hidden = true;
-    drawer.removeEventListener('transitionend', hideDrawer);
-  };
-  drawer.addEventListener('transitionend', hideDrawer);
+  });
   document.body.classList.remove('is-locked');
   setBurgerOpen(false);
   lastFocused?.focus();

@@ -15,7 +15,7 @@ export const Logo = (className = ''): HTMLAnchorElement => {
   });
   logo.addEventListener('click', (event) => {
     event.preventDefault();
-    navigate('home');
+    navigate({ route: 'home' });
   });
   return logo;
 };

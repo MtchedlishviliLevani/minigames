@@ -1,6 +1,8 @@
 import type { IconName } from '../components/Icon/Icon';
 
-export type Route = 'home' | 'library';
+export type Route = 'home' | 'library' | 'not-found';
+
+export type KnownRoute = Exclude<Route, 'not-found'>;
 
 export interface NavLink {
   label: string;
@@ -30,15 +32,6 @@ export interface Game {
   rating: number;
   likesCount: number;
   cardImage: string;
-  featured: boolean;
-}
-
-export interface MockResponse<T> {
-  data: T[];
-  meta: {
-    totalItems: number;
-    description: string;
-  };
 }
 
 export interface LeaderboardEntry {
@@ -54,6 +47,7 @@ export interface LeaderboardEntry {
 export interface Category {
   slug: string;
   label: string;
+  isDefault: boolean;
 }
 
 export interface SortOption {
@@ -62,4 +56,58 @@ export interface SortOption {
   prefix: string;
   suffix?: string;
   arrow: IconName;
+}
+
+export interface GameSpecs {
+  genre: string;
+  players: string;
+  duration: string;
+  price: string;
+}
+
+export interface GameRecord {
+  position: number;
+  playerName: string;
+  score: number;
+  achievedAt: string;
+}
+
+export interface GameDetails {
+  slug: string;
+  name: string;
+  heroImage: string;
+  rating: number;
+  likesCount: number;
+  isLikedByCurrentUser: boolean;
+  fullDescription: string;
+  specs: GameSpecs;
+  topRecords: GameRecord[];
+}
+
+export interface GameComment {
+  commentId: string;
+  authorName: string;
+  text: string;
+  likesCount: number;
+  isLikedByCurrentUser: boolean;
+  createdAt: string;
+}
+
+export interface GamesPage {
+  games: Game[];
+  page: number;
+  totalPages: number;
+  totalItems: number;
+}
+
+export interface GamesQuery {
+  category?: string;
+  sort?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface GameCommentsPage {
+  comments: GameComment[];
+  totalComments: number;
 }
