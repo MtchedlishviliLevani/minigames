@@ -42,22 +42,22 @@ minigames/
 ├── .github/            # Pull request template
 ├── .husky/             # Git hooks
 ├── public/
-│   ├── assets/         # Game card images
-│   └── mock/           # Mock JSON data (games, leaderboard)
+│   └── assets/         # Game card and hero images
 ├── scripts/            # Node helper scripts (commit message check)
 ├── src/
 │   ├── main.ts         # Entry point
 │   ├── app.ts          # App bootstrap — builds the page from components
-│   ├── api/            # Mock API (fetches JSON from public/mock)
+│   ├── api/            # REST client and endpoint wrappers for the backend API
 │   ├── components/     # UI components (Header, Carousel, Library*, GameDetailsDialog, Footer…)
-│   ├── pages/          # Page compositions (HomePage, LibraryPage)
-│   ├── router/         # Client-side page switch (no reload, no History API yet)
-│   ├── data/           # Static content (navigation, categories, game details)
+│   ├── pages/          # Page compositions (HomePage, LibraryPage, NotFoundPage)
+│   ├── router/         # History API router — pages, Library query and dialogs
+│   ├── data/           # Navigation content, sort options, category cache
 │   ├── styles/         # Sass tokens, breakpoints, mixins, reset, layout
 │   ├── types/          # Shared TypeScript types
-│   ├── utils/          # Helpers (DOM builder, formatting, validation)
+│   ├── utils/          # Helpers (DOM builder, async sections, formatting, validation)
 │   └── assets/         # Icons and images imported by the app
 ├── index.html          # Empty body — everything is rendered by JavaScript
+├── vercel.json         # SPA rewrite so deep links resolve on the deployment
 ├── vite.config.ts
 ├── tsconfig.json
 ├── eslint.config.js
