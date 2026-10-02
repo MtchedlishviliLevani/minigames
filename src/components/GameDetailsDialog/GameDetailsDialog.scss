@@ -66,6 +66,10 @@
     inset: 0;
   }
 
+  &__panel:has(.data-state) &__cover-skeleton {
+    display: none;
+  }
+
   &__cover {
     display: block;
     width: 100%;

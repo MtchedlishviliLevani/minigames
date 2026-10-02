@@ -357,6 +357,10 @@ function loadDetails(slug: string): void {
       return DetailsContent(details);
     },
     errorMessage: 'Game details could not be loaded.',
+    notFound: {
+      title: 'Game not found',
+      message: 'This game is not available any more. Pick another one from the library.',
+    },
   });
 }
 
