@@ -11,6 +11,7 @@ export interface AsyncSectionOptions<T> {
   isEmpty?: (data: T) => boolean;
   emptyMessage?: string;
   errorMessage?: string;
+  notFound?: { title: string; message: string };
   wrap?: (state: HTMLElement) => Node[];
 }
 
@@ -18,6 +19,7 @@ export interface AsyncSection {
   reload: () => void;
 }
 
+const NOT_FOUND_STATUS = 404;
 const DEFAULT_EMPTY_MESSAGE = 'There is nothing to show here yet.';
 const DEFAULT_ERROR_MESSAGE = 'We could not load this content. Please try again.';
 
@@ -51,6 +53,14 @@ export function createAsyncSection<T>(options: AsyncSectionOptions<T>): AsyncSec
       })
       .catch((error: unknown) => {
         if (request.signal.aborted) return;
+
+        const { notFound } = options;
+        if (notFound && error instanceof ApiError && error.status === NOT_FOUND_STATUS) {
+          container.replaceChildren(...wrap(EmptyState(notFound.message, notFound.title)));
+          showSnackbar(notFound.title, 'warning');
+          return;
+        }
+
         const message = options.errorMessage ?? DEFAULT_ERROR_MESSAGE;
         container.replaceChildren(...wrap(ErrorBanner(message, reload)));
         showSnackbar(describe(error, message), 'error');
