@@ -37,5 +37,5 @@ export function mountApp(root: HTMLElement): void {
   renderPage(getRoute());
   onRouteChange(renderPage);
 
-  root.replaceChildren(Header(), main, Footer(), MobileMenu(), AuthDialog(), GameDetailsDialog());
+  root.prepend(Header(), main, Footer(), MobileMenu(), AuthDialog(), GameDetailsDialog());
 }

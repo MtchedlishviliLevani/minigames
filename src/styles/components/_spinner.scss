@@ -1,0 +1,23 @@
+@use '../tokens' as t;
+@use '../breakpoints' as bp;
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: t.$spinner-size;
+  height: t.$spinner-size;
+  flex-shrink: 0;
+  border: t.$spinner-width solid currentColor;
+  border-right-color: transparent;
+  border-radius: t.$corner-full;
+  animation: spinner-rotate t.$spinner-duration linear infinite;
+
+  @include bp.reduced-motion {
+    animation-duration: calc(#{t.$spinner-duration} * 4);
+  }
+}

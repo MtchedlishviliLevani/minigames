@@ -111,3 +111,25 @@ export interface GameCommentsPage {
   comments: GameComment[];
   totalComments: number;
 }
+
+export interface AuthProfile {
+  displayName: string;
+  email: string;
+  avatarUrl?: string;
+}
+
+export interface FavoriteState {
+  isFavorited: boolean;
+  likesCount: number;
+}
+
+export interface CommentLikeState {
+  isLikedByCurrentUser: boolean;
+  likesCount: number;
+}
+
+export interface NewComment {
+  userEmail: string;
+  authorName: string;
+  text: string;
+}

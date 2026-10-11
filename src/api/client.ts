@@ -33,6 +33,35 @@ async function readErrorMessage(response: Response): Promise<string> {
   return `Request failed with status ${String(response.status)}`;
 }
 
+export const MUTATION_TIMEOUT_MS = 15000;
+
+const UNKNOWN_OUTCOME_MESSAGE = 'No response from the server, so the result is unknown.';
+const SERVER_ERROR_STATUS = 500;
+
+export function isOutcomeUnknown(error: unknown): boolean {
+  return error instanceof ApiError && (error.status === 0 || error.status >= SERVER_ERROR_STATUS);
+}
+
+export async function send<T>(path: string, body: unknown): Promise<T> {
+  let response: Response;
+
+  try {
+    response = await fetch(buildUrl(path, {}), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(MUTATION_TIMEOUT_MS),
+    });
+  } catch {
+    throw new ApiError(UNKNOWN_OUTCOME_MESSAGE, 0);
+  }
+
+  if (!response.ok) throw new ApiError(await readErrorMessage(response), response.status);
+
+  const result: unknown = await response.json();
+  return result as T;
+}
+
 export async function request<T>(
   path: string,
   params: Record<string, QueryValue> = {},
