@@ -5,7 +5,8 @@ import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
 import { runAfterTransition } from '../../utils/transition';
 import { Icon } from '../Icon/Icon';
-import { AuthForm, focusAuthForm, resetAuthForm } from './AuthForm';
+import { AuthForm } from './AuthForm';
+import type { AuthFormHandle } from './AuthForm';
 
 const COPY: Record<AuthMode, { title: string; subtitle: string; tab: string; done: string }> = {
   login: {
@@ -55,7 +56,7 @@ const tabs: Record<AuthMode, HTMLButtonElement> = {
   login: Tab('login'),
   register: Tab('register'),
 };
-const forms: Record<AuthMode, HTMLElement> = {
+const forms: Record<AuthMode, AuthFormHandle> = {
   login: AuthForm({ mode: 'login', onSubmit: showStatus, onSwitch: requestAuthMode }),
   register: AuthForm({ mode: 'register', onSubmit: showStatus, onSwitch: requestAuthMode }),
 };
@@ -64,8 +65,8 @@ const body = el('div', {
   className: 'auth-dialog__body',
   children: [
     el('div', { className: 'auth-dialog__header', children: [title, subtitle] }),
-    forms.login,
-    forms.register,
+    forms.login.element,
+    forms.register.element,
   ],
 });
 
@@ -105,7 +106,7 @@ function applyMode(mode: AuthMode): void {
     tabs[other].classList.toggle('is-active', isActive);
     tabs[other].setAttribute('aria-selected', String(isActive));
     tabs[other].setAttribute('tabindex', isActive ? '0' : '-1');
-    forms[other].hidden = !isActive;
+    forms[other].element.hidden = !isActive;
   }
 }
 
@@ -114,10 +115,11 @@ function requestMode(mode: AuthMode): void {
   switching = true;
   status.textContent = '';
   runAfterTransition(body, () => {
+    for (const other of MODES) forms[other].reset();
     applyMode(mode);
     body.classList.remove('is-switching');
     switching = false;
-    focusAuthForm(forms[mode]);
+    forms[mode].focus();
   });
   body.classList.add('is-switching');
 }
@@ -140,7 +142,7 @@ function showDialog(mode: AuthMode): void {
     });
   }
   document.body.classList.add('is-locked');
-  focusAuthForm(forms[mode]);
+  forms[mode].focus();
 }
 
 function hideDialog(): void {
@@ -150,7 +152,7 @@ function hideDialog(): void {
   runAfterTransition(panel, () => {
     dialog.close();
     status.textContent = '';
-    for (const mode of MODES) resetAuthForm(forms[mode]);
+    for (const mode of MODES) forms[mode].reset();
   });
 }
 

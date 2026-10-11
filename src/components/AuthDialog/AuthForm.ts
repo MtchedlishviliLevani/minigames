@@ -1,76 +1,66 @@
 import type { AuthMode } from '../../types';
 import { el } from '../../utils/dom';
 import {
+  AUTH_FIELDS,
+  isAuthFormValid,
   PASSWORD_MIN_LENGTH,
-  validateConfirm,
-  validateEmail,
-  validateName,
-  validatePassword,
+  validateAuthField,
 } from '../../utils/validation';
+import type { AuthField, AuthValues } from '../../utils/validation';
 import { Icon, type IconName } from '../Icon/Icon';
 
 interface FieldConfig {
-  name: string;
+  name: AuthField;
   label: string;
   type: 'text' | 'email' | 'password';
   icon: IconName;
   autocomplete: string;
   placeholder: string;
-  minLength?: number;
 }
 
-const EMAIL_FIELD: FieldConfig = {
-  name: 'email',
-  label: 'Email',
-  type: 'email',
-  icon: 'mail',
-  autocomplete: 'email',
-  placeholder: 'e.g. alex@minigames.com',
+const FIELD_CONFIG: Record<AuthField, FieldConfig> = {
+  username: {
+    name: 'username',
+    label: 'Username',
+    type: 'text',
+    icon: 'user',
+    autocomplete: 'username',
+    placeholder: 'e.g. AlexPro99',
+  },
+  email: {
+    name: 'email',
+    label: 'Email',
+    type: 'email',
+    icon: 'mail',
+    autocomplete: 'email',
+    placeholder: 'e.g. alex@minigames.com',
+  },
+  password: {
+    name: 'password',
+    label: 'Password',
+    type: 'password',
+    icon: 'lock',
+    autocomplete: 'new-password',
+    placeholder: `${String(PASSWORD_MIN_LENGTH)}+ chars, A-Z, digit, symbol`,
+  },
+  confirm: {
+    name: 'confirm',
+    label: 'Confirm password',
+    type: 'password',
+    icon: 'lock',
+    autocomplete: 'new-password',
+    placeholder: 'Repeat your password',
+  },
 };
 
-const FIELDS: Record<AuthMode, FieldConfig[]> = {
-  login: [
-    EMAIL_FIELD,
-    {
-      name: 'password',
-      label: 'Password',
-      type: 'password',
-      icon: 'lock',
-      autocomplete: 'current-password',
-      placeholder: 'Your password',
-      minLength: PASSWORD_MIN_LENGTH,
-    },
-  ],
-  register: [
-    {
-      name: 'name',
-      label: 'Nickname',
-      type: 'text',
-      icon: 'user',
-      autocomplete: 'nickname',
-      placeholder: 'e.g. Alex_Pro99',
-    },
-    EMAIL_FIELD,
-    {
-      name: 'password',
-      label: 'Password',
-      type: 'password',
-      icon: 'lock',
-      autocomplete: 'new-password',
-      placeholder: `At least ${String(PASSWORD_MIN_LENGTH)} characters`,
-      minLength: PASSWORD_MIN_LENGTH,
-    },
-    {
-      name: 'confirm',
-      label: 'Confirm password',
-      type: 'password',
-      icon: 'lock',
-      autocomplete: 'new-password',
-      placeholder: 'Repeat your password',
-      minLength: PASSWORD_MIN_LENGTH,
-    },
-  ],
+const LOGIN_PASSWORD: FieldConfig = {
+  ...FIELD_CONFIG.password,
+  autocomplete: 'current-password',
+  placeholder: 'Your password',
 };
+
+const fieldConfig = (mode: AuthMode, field: AuthField): FieldConfig =>
+  mode === 'login' && field === 'password' ? LOGIN_PASSWORD : FIELD_CONFIG[field];
 
 const COPY: Record<
   AuthMode,
@@ -90,12 +80,17 @@ const COPY: Record<
   },
 };
 
-export type AuthFormData = Record<string, string>;
-
 export interface AuthFormProps {
   mode: AuthMode;
-  onSubmit: (mode: AuthMode, data: AuthFormData) => void;
+  onSubmit: (mode: AuthMode, values: AuthValues) => void;
   onSwitch: (mode: AuthMode) => void;
+}
+
+export interface AuthFormHandle {
+  element: HTMLDivElement;
+  reset: () => void;
+  focus: () => void;
+  setLocked: (locked: boolean) => void;
 }
 
 const Field = (mode: AuthMode, config: FieldConfig): HTMLElement => {
@@ -114,7 +109,6 @@ const Field = (mode: AuthMode, config: FieldConfig): HTMLElement => {
       'aria-describedby': errorId,
     },
   });
-  if (config.minLength) input.setAttribute('minlength', String(config.minLength));
 
   return el('div', {
     className: 'auth-form__field',
@@ -132,49 +126,13 @@ const Field = (mode: AuthMode, config: FieldConfig): HTMLElement => {
   });
 };
 
-const collect = (form: HTMLFormElement): AuthFormData => {
-  const data: AuthFormData = {};
-  for (const [key, value] of new FormData(form)) {
-    if (typeof value === 'string') data[key] = value;
-  }
-  return data;
-};
+const isAuthField = (mode: AuthMode, name: string): name is AuthField =>
+  AUTH_FIELDS[mode].some((field) => field === name);
 
-const validate = (mode: AuthMode, data: AuthFormData): [string, string | null][] => {
-  const results: [string, string | null][] = [];
-  if (mode === 'register') results.push(['name', validateName(data.name ?? '')]);
-  results.push(['email', validateEmail(data.email ?? '')]);
-  results.push(['password', validatePassword(data.password ?? '')]);
-  if (mode === 'register') {
-    results.push(['confirm', validateConfirm(data.password ?? '', data.confirm ?? '')]);
-  }
-  return results;
-};
-
-function setError(form: HTMLFormElement, name: string, message: string | null): void {
-  const error = form.querySelector(`[data-error-for="${name}"]`);
-  const input = form.querySelector(`[name="${name}"]`);
-  error?.replaceChildren(message ?? '');
-  if (message) {
-    input?.setAttribute('aria-invalid', 'true');
-  } else {
-    input?.removeAttribute('aria-invalid');
-  }
-}
-
-export function resetAuthForm(panel: HTMLElement): void {
-  const form = panel.querySelector('form');
-  if (!form) return;
-  form.reset();
-  for (const input of form.querySelectorAll('input')) setError(form, input.name, null);
-}
-
-export function focusAuthForm(panel: HTMLElement): void {
-  panel.querySelector('input')?.focus();
-}
-
-export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): HTMLDivElement => {
+export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): AuthFormHandle => {
   const copy = COPY[mode];
+  const fields = AUTH_FIELDS[mode];
+  const touched = new Set<AuthField>();
 
   const switchButton = el('button', {
     className: 'auth-form__switch',
@@ -185,6 +143,12 @@ export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): HTMLDivEl
     onSwitch(copy.other);
   });
 
+  const submitButton = el('button', {
+    className: 'btn btn--filled btn--large btn--block auth-form__submit',
+    attrs: { type: 'submit', disabled: '' },
+    text: copy.submit,
+  });
+
   const form = el('form', {
     className: 'auth-form',
     attrs: {
@@ -192,35 +156,76 @@ export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): HTMLDivEl
       novalidate: '',
     },
     children: [
-      ...FIELDS[mode].map((field) => Field(mode, field)),
-      el('button', {
-        className: 'btn btn--filled btn--large btn--block',
-        attrs: { type: 'submit' },
-        text: copy.submit,
-      }),
+      ...fields.map((field) => Field(mode, fieldConfig(mode, field))),
+      submitButton,
       el('p', { className: 'auth-form__footer', children: [copy.prompt, switchButton] }),
     ],
   });
 
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const data = collect(form);
-    const problems = validate(mode, data).filter(([, message]) => message !== null);
-    for (const [name, message] of problems) setError(form, name, message);
+  const input = (field: AuthField): HTMLInputElement | null =>
+    form.querySelector<HTMLInputElement>(`[name="${field}"]`);
 
-    const firstInvalid = problems[0]?.[0];
-    if (firstInvalid) {
-      form.querySelector<HTMLInputElement>(`[name="${firstInvalid}"]`)?.focus();
+  const values = (): AuthValues => {
+    const result: AuthValues = {};
+    for (const field of fields) result[field] = input(field)?.value ?? '';
+    return result;
+  };
+
+  const showError = (field: AuthField, message: string | null): void => {
+    form.querySelector(`[data-error-for="${field}"]`)?.replaceChildren(message ?? '');
+    const target = input(field);
+    if (message === null) {
+      target?.removeAttribute('aria-invalid');
+    } else {
+      target?.setAttribute('aria-invalid', 'true');
+    }
+  };
+
+  const validateField = (field: AuthField): void => {
+    showError(field, validateAuthField(mode, field, values()));
+  };
+
+  let locked = false;
+
+  const updateSubmit = (): void => {
+    submitButton.disabled = locked || !isAuthFormValid(mode, values());
+  };
+
+  const handleChange = (event: Event): void => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || !isAuthField(mode, target.name)) return;
+    const field = target.name;
+    if (event.type === 'input' && target.value === '' && !touched.has(field)) {
+      updateSubmit();
       return;
     }
-    onSubmit(mode, data);
+    touched.add(field);
+    validateField(field);
+    if (field === 'password' && touched.has('confirm')) validateField('confirm');
+    updateSubmit();
+  };
+
+  form.addEventListener('input', handleChange);
+  form.addEventListener('focusout', handleChange);
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (locked) return;
+    const current = values();
+    if (!isAuthFormValid(mode, current)) {
+      for (const field of fields) {
+        touched.add(field);
+        validateField(field);
+      }
+      const firstInvalid = fields.find((field) => validateAuthField(mode, field, current) !== null);
+      if (firstInvalid !== undefined) input(firstInvalid)?.focus();
+      updateSubmit();
+      return;
+    }
+    onSubmit(mode, current);
   });
 
-  form.addEventListener('input', (event) => {
-    if (event.target instanceof HTMLInputElement) setError(form, event.target.name, null);
-  });
-
-  return el('div', {
+  const element = el('div', {
     className: 'auth-form-panel',
     attrs: {
       id: `auth-panel-${mode}`,
@@ -229,4 +234,27 @@ export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): HTMLDivEl
     },
     children: [form],
   });
+
+  return {
+    element,
+    reset: () => {
+      form.reset();
+      touched.clear();
+      for (const field of fields) showError(field, null);
+      updateSubmit();
+    },
+    focus: () => {
+      form.querySelector('input')?.focus();
+    },
+    setLocked: (next) => {
+      locked = next;
+      form.setAttribute('aria-busy', String(next));
+      for (const control of form.querySelectorAll<HTMLInputElement | HTMLButtonElement>(
+        'input, button'
+      )) {
+        if (control !== submitButton) control.disabled = next;
+      }
+      updateSubmit();
+    },
+  };
 };
