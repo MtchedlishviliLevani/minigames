@@ -111,3 +111,9 @@ export interface GameCommentsPage {
   comments: GameComment[];
   totalComments: number;
 }
+
+export interface AuthProfile {
+  displayName: string;
+  email: string;
+  avatarUrl?: string;
+}
