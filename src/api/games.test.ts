@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { mockFetch, path } from '../test/http';
+import { mockFetch, path, requestUrl } from '../test/http';
+import type { FetchMock } from '../test/http';
 import {
   getCategories,
   getFeaturedGames,
@@ -7,10 +8,16 @@ import {
   getGameDetails,
   getGames,
   getLeaderboard,
+  postComment,
+  toggleCommentLike,
+  toggleFavorite,
 } from './games';
 
-const firstUrl = (fetchMock: ReturnType<typeof mockFetch>): URL =>
-  new URL(String(fetchMock.mock.calls[0]?.[0]));
+const firstUrl = (fetchMock: FetchMock): URL => {
+  const input = fetchMock.mock.calls[0]?.[0];
+  if (input === undefined) throw new Error('No request was made');
+  return new URL(requestUrl(input));
+};
 
 describe('games api', () => {
   it('maps a games page and forwards the query', async () => {
@@ -65,5 +72,65 @@ describe('games api', () => {
     ]);
     await expect(getCategories()).resolves.toEqual([{ slug: 'all' }]);
     await expect(getLeaderboard()).resolves.toEqual([{ rank: 1 }]);
+  });
+
+  it('personalises details and comments with an encoded email', async () => {
+    const fetchMock = mockFetch([
+      { match: path('/comments'), body: { data: [], meta: { totalComments: 0 } } },
+      { match: path('/palia'), body: { data: { slug: 'palia' } } },
+    ]);
+
+    await getGameDetails('palia', 'a+b@mail.com');
+    await getGameComments('palia', 'a+b@mail.com');
+
+    for (const [input] of fetchMock.mock.calls) {
+      expect(requestUrl(input)).toContain('userEmail=a%2Bb%40mail.com');
+    }
+  });
+
+  it('omits the email for guests', async () => {
+    const fetchMock = mockFetch([{ match: () => true, body: { data: { slug: 'palia' } } }]);
+    await getGameDetails('palia');
+    expect(firstUrl(fetchMock).searchParams.has('userEmail')).toBe(false);
+  });
+
+  it('toggles a favorite with the user email', async () => {
+    const fetchMock = mockFetch([
+      {
+        match: path('/games/palia/favorite', 'POST'),
+        body: { data: { gameSlug: 'palia', isFavorited: true, likesCount: 11 } },
+      },
+    ]);
+    await expect(toggleFavorite('palia', 'a@b.co')).resolves.toMatchObject({
+      isFavorited: true,
+      likesCount: 11,
+    });
+    expect(fetchMock.mock.calls[0]?.[1]).toMatchObject({ body: '{"userEmail":"a@b.co"}' });
+  });
+
+  it('posts a comment', async () => {
+    const fetchMock = mockFetch([
+      {
+        match: path('/games/palia/comments', 'POST'),
+        status: 201,
+        body: { data: { commentId: 'c1', text: 'Nice' } },
+      },
+    ]);
+    const comment = { userEmail: 'a@b.co', authorName: 'Alex', text: 'Nice' };
+    await expect(postComment('palia', comment)).resolves.toMatchObject({ commentId: 'c1' });
+    expect(fetchMock.mock.calls[0]?.[1]).toMatchObject({ body: JSON.stringify(comment) });
+  });
+
+  it('toggles a comment like', async () => {
+    mockFetch([
+      {
+        match: path('/comments/c%201/like', 'POST'),
+        body: { data: { isLikedByCurrentUser: true, likesCount: 4 } },
+      },
+    ]);
+    await expect(toggleCommentLike('c 1', 'a@b.co')).resolves.toEqual({
+      isLikedByCurrentUser: true,
+      likesCount: 4,
+    });
   });
 });
