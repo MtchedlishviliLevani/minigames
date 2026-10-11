@@ -1,5 +1,6 @@
 import './GameDetailsDialog.scss';
 import { COMMENTS_LIMIT, getGameComments, getGameDetails } from '../../api/games';
+import { getSession, onSessionChange } from '../../auth/authState';
 import type { AppState } from '../../router/router';
 import { getState, navigate, onStateChange } from '../../router/router';
 import type { GameComment, GameCommentsPage, GameDetails, GameRecord } from '../../types';
@@ -316,6 +317,7 @@ const dialog = el('dialog', {
 
 let section: AsyncSection | undefined;
 let currentSlug = '';
+let loadedFor: string | null = null;
 
 function setCoverLoading(loading: boolean): void {
   if (loading) cover.remove();
@@ -335,8 +337,13 @@ function showCover(details: GameDetails): void {
   setCoverLoading(false);
 }
 
+function viewerKey(): string {
+  return getSession()?.email ?? '';
+}
+
 function loadDetails(slug: string): void {
   currentSlug = slug;
+  loadedFor = `${slug}|${viewerKey()}`;
 
   if (section !== undefined) {
     section.reload();
@@ -366,7 +373,7 @@ function loadDetails(slug: string): void {
 
 function showDialog(slug: string): void {
   dialog.dataset.slug = slug;
-  loadDetails(slug);
+  if (loadedFor !== `${slug}|${viewerKey()}`) loadDetails(slug);
 
   if (!dialog.open) {
     dialog.showModal();
@@ -381,20 +388,29 @@ function showDialog(slug: string): void {
 function hideDialog(): void {
   if (!dialog.open) return;
   dialog.classList.remove('is-open');
-  document.body.classList.remove('is-locked');
+  if (getState().auth === null) document.body.classList.remove('is-locked');
   runAfterTransition(panel, () => {
     dialog.close();
     delete dialog.dataset.slug;
   });
 }
 
+const visibleGame = (state: AppState): string | null => (state.auth === null ? state.game : null);
+
 function syncDialog(next: AppState, previous: AppState): void {
-  if (next.game === previous.game) return;
-  if (next.game === null) {
+  const game = visibleGame(next);
+  if (game === visibleGame(previous)) return;
+  if (game === null) {
     hideDialog();
+    if (next.game === null) loadedFor = null;
   } else {
-    showDialog(next.game);
+    showDialog(game);
   }
+}
+
+function refreshForViewer(): void {
+  const game = visibleGame(getState());
+  if (game !== null && dialog.open) loadDetails(game);
 }
 
 export function openGameDetails(slug: string): void {
@@ -423,8 +439,9 @@ function openAfterMount(slug: string): void {
 }
 
 export const GameDetailsDialog = (): HTMLDialogElement => {
-  const initial = getState();
+  const initial = visibleGame(getState());
   onStateChange(syncDialog);
-  if (initial.game !== null) openAfterMount(initial.game);
+  onSessionChange(refreshForViewer);
+  if (initial !== null) openAfterMount(initial);
   return dialog;
 };
