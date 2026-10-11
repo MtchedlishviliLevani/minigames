@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import type { Mock } from 'vitest';
 
 export interface MockRoute {
   match: (url: URL, init: RequestInit | undefined) => boolean;
@@ -14,9 +15,15 @@ export function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
-export function mockFetch(routes: MockRoute[] = []): ReturnType<typeof vi.fn> {
-  const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
-    const url = new URL(input instanceof Request ? input.url : String(input));
+export function requestUrl(input: RequestInfo | URL): string {
+  return input instanceof Request ? input.url : input.toString();
+}
+
+export type FetchMock = Mock<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>;
+
+export function mockFetch(routes: MockRoute[] = []): FetchMock {
+  const fetchMock: FetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+    const url = new URL(requestUrl(input));
     const route = routes.find((candidate) => candidate.match(url, init));
     if (route === undefined) return Promise.resolve(jsonResponse({ error: 'Not mocked' }, 500));
     if (route.error !== undefined) return Promise.reject(route.error);
