@@ -117,3 +117,19 @@ export interface AuthProfile {
   email: string;
   avatarUrl?: string;
 }
+
+export interface FavoriteState {
+  isFavorited: boolean;
+  likesCount: number;
+}
+
+export interface CommentLikeState {
+  isLikedByCurrentUser: boolean;
+  likesCount: number;
+}
+
+export interface NewComment {
+  userEmail: string;
+  authorName: string;
+  text: string;
+}

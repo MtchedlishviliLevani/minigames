@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { jsonResponse } from '../test/http';
-import { API_BASE_URL, ApiError, request } from './client';
+import { API_BASE_URL, ApiError, isOutcomeUnknown, request, send } from './client';
 
 describe('request', () => {
   it('builds the url from the path and skips undefined params', async () => {
@@ -62,5 +62,49 @@ describe('request', () => {
       vi.fn(() => Promise.reject(abort))
     );
     await expect(request('/games')).rejects.toBe(abort);
+  });
+});
+
+describe('send', () => {
+  it('posts json with a timeout signal', async () => {
+    const fetchMock = vi.fn(() => Promise.resolve(jsonResponse({ data: { ok: true } }, 201)));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(send('/games/a/favorite', { userEmail: 'a@b.co' })).resolves.toEqual({
+      data: { ok: true },
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(`${API_BASE_URL}/games/a/favorite`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{"userEmail":"a@b.co"}',
+      signal: expect.any(AbortSignal) as AbortSignal,
+    });
+  });
+
+  it('reports a definitive rejection with its status', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve(jsonResponse({ error: 'Text is too long' }, 400)))
+    );
+    const error = await send('/x', {}).catch((caught: unknown) => caught);
+    expect(error).toMatchObject({ status: 400, message: 'Text is too long' });
+    expect(isOutcomeUnknown(error)).toBe(false);
+  });
+
+  it('marks network failures and timeouts as an unknown outcome', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.reject(new DOMException('Timed out', 'TimeoutError')))
+    );
+    const error = await send('/x', {}).catch((caught: unknown) => caught);
+    expect(error).toMatchObject({ status: 0 });
+    expect(isOutcomeUnknown(error)).toBe(true);
+  });
+
+  it('treats server errors as unknown and other errors as known', () => {
+    expect(isOutcomeUnknown(new ApiError('boom', 502))).toBe(true);
+    expect(isOutcomeUnknown(new ApiError('nope', 429))).toBe(false);
+    expect(isOutcomeUnknown(new Error('x'))).toBe(false);
   });
 });

@@ -1,5 +1,8 @@
 import type {
   Category,
+  CommentLikeState,
+  FavoriteState,
+  NewComment,
   Game,
   GameComment,
   GameCommentsPage,
@@ -8,7 +11,7 @@ import type {
   GamesQuery,
   LeaderboardEntry,
 } from '../types';
-import { request } from './client';
+import { request, send } from './client';
 
 interface ListResponse<T, M = unknown> {
   data: T[];
@@ -49,12 +52,14 @@ export async function getFeaturedGames(signal?: AbortSignal): Promise<Game[]> {
   return data;
 }
 
-export async function getGameDetails(slug: string, signal?: AbortSignal): Promise<GameDetails> {
-  const { data } = await request<ItemResponse<GameDetails>>(
-    `/games/${encodeURIComponent(slug)}`,
-    {},
-    signal
-  );
+const gamePath = (slug: string): string => `/games/${encodeURIComponent(slug)}`;
+
+export async function getGameDetails(
+  slug: string,
+  userEmail?: string,
+  signal?: AbortSignal
+): Promise<GameDetails> {
+  const { data } = await request<ItemResponse<GameDetails>>(gamePath(slug), { userEmail }, signal);
   return data;
 }
 
@@ -62,14 +67,38 @@ export const COMMENTS_LIMIT = 3;
 
 export async function getGameComments(
   slug: string,
+  userEmail?: string,
   signal?: AbortSignal
 ): Promise<GameCommentsPage> {
   const { data, meta } = await request<ListResponse<GameComment, CommentsMeta>>(
-    `/games/${encodeURIComponent(slug)}/comments`,
-    { limit: COMMENTS_LIMIT, sort: 'newest' },
+    `${gamePath(slug)}/comments`,
+    { limit: COMMENTS_LIMIT, sort: 'newest', userEmail },
     signal
   );
   return { comments: data, totalComments: meta.totalComments };
+}
+
+export async function toggleFavorite(slug: string, userEmail: string): Promise<FavoriteState> {
+  const { data } = await send<ItemResponse<FavoriteState>>(`${gamePath(slug)}/favorite`, {
+    userEmail,
+  });
+  return data;
+}
+
+export async function postComment(slug: string, comment: NewComment): Promise<GameComment> {
+  const { data } = await send<ItemResponse<GameComment>>(`${gamePath(slug)}/comments`, comment);
+  return data;
+}
+
+export async function toggleCommentLike(
+  commentId: string,
+  userEmail: string
+): Promise<CommentLikeState> {
+  const { data } = await send<ItemResponse<CommentLikeState>>(
+    `/comments/${encodeURIComponent(commentId)}/like`,
+    { userEmail }
+  );
+  return data;
 }
 
 export async function getCategories(signal?: AbortSignal): Promise<Category[]> {
