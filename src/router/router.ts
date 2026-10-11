@@ -17,11 +17,15 @@ export interface NavigateOptions {
 
 type StateListener = (state: AppState, previous: AppState) => void;
 
+export type NavigationGuard = (next: AppState, previous: AppState) => AppState;
+
 const ROUTE_PATHS: Record<KnownRoute, string> = { home: '/', library: '/library' };
 const HOME_ALIAS = '/home';
 const AUTH_MODES: AuthMode[] = ['login', 'register'];
 
 const listeners = new Set<StateListener>();
+
+let guard: NavigationGuard = (next) => next;
 
 let state: AppState = {
   route: 'home',
@@ -107,6 +111,24 @@ function resolve(patch: Partial<AppState>): AppState {
   return next;
 }
 
+function currentUrl(): string {
+  return `${window.location.pathname}${window.location.search}`;
+}
+
+function withoutAuthParam(): string {
+  const url = new URL(window.location.href);
+  url.searchParams.delete('auth');
+  return `${url.pathname}${url.search}${url.hash}`;
+}
+
+function guarded(candidate: AppState, previous: AppState): AppState {
+  const next = guard(candidate, previous);
+  if (next !== candidate && next.auth === null && candidate.auth !== null) {
+    window.history.replaceState(null, '', withoutAuthParam());
+  }
+  return next;
+}
+
 function commit(next: AppState): void {
   const previous = state;
   state = next;
@@ -121,12 +143,17 @@ export function getRoute(): Route {
   return state.route;
 }
 
-export function navigate(patch: Partial<AppState>, options: NavigateOptions = {}): void {
-  const next = resolve(patch);
-  const url = buildUrl(next);
-  if (url === `${window.location.pathname}${window.location.search}`) return;
+export function setNavigationGuard(next: NavigationGuard): void {
+  guard = next;
+}
 
-  if (options.replace === true) {
+export function navigate(patch: Partial<AppState>, options: NavigateOptions = {}): void {
+  const candidate = resolve(patch);
+  const next = guard(candidate, state);
+  const url = buildUrl(next);
+  if (url === currentUrl()) return;
+
+  if (options.replace === true || (next !== candidate && next.auth !== candidate.auth)) {
     window.history.replaceState(null, '', url);
   } else {
     window.history.pushState(null, '', url);
@@ -146,9 +173,10 @@ export function onRouteChange(listener: (route: Route) => void): void {
 }
 
 export function startRouter(): void {
-  state = parseLocation();
-  window.history.replaceState(null, '', buildUrl(state));
+  const initial = parseLocation();
+  state = guarded(initial, initial);
+  window.history.replaceState(null, '', `${buildUrl(state)}${window.location.hash}`);
   window.addEventListener('popstate', () => {
-    commit(parseLocation());
+    commit(guarded(parseLocation(), state));
   });
 }
