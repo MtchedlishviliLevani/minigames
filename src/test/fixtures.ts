@@ -1,4 +1,4 @@
-import type { GameComment, GameDetails } from '../types';
+import type { Category, Game, GameComment, GameDetails, LeaderboardEntry } from '../types';
 
 export const DETAILS: GameDetails = {
   slug: 'tukoni-forest-keepers',
@@ -24,3 +24,42 @@ export const comment = (overrides: Partial<GameComment> = {}): GameComment => ({
   createdAt: '2026-10-10T10:00:00Z',
   ...overrides,
 });
+
+export const game = (slug: string, overrides: Partial<Game> = {}): Game => ({
+  slug,
+  name: slug.replace(/-/g, ' '),
+  category: 'puzzle',
+  price: 'Free',
+  shortDescription: `About ${slug}`,
+  rating: 4.5,
+  likesCount: 1500,
+  cardImage: `/assets/images/games/${slug}-card.jpg`,
+  ...overrides,
+});
+
+export const CATEGORIES: Category[] = [
+  { slug: 'all', label: 'All Games', isDefault: true },
+  { slug: 'puzzle', label: 'Puzzle', isDefault: false },
+  { slug: 'farm', label: 'Farm', isDefault: false },
+];
+
+export const LEADERS: LeaderboardEntry[] = [
+  {
+    rank: 1,
+    playerName: 'Alex_Pro99',
+    gamesPlayed: 1240,
+    totalScore: 98450,
+    streakDays: 12,
+    favoriteGameSlug: 'palia',
+    favoriteGameName: 'Palia',
+  },
+  {
+    rank: 2,
+    playerName: 'luna',
+    gamesPlayed: 800,
+    totalScore: 500,
+    streakDays: 1,
+    favoriteGameSlug: 'tiny-glade',
+    favoriteGameName: 'Tiny Glade',
+  },
+];
