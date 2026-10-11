@@ -36,6 +36,13 @@ $color-avatar-2: #a3e2c9;
 $color-avatar-3: #bce3ff;
 $color-avatar-4: #ffc8ff;
 $color-avatar-5: #e8dff5;
+$avatar-random-colors: (
+  1: $color-avatar-1,
+  2: $color-avatar-2,
+  3: $color-avatar-3,
+  4: $color-avatar-4,
+  5: $color-avatar-5,
+);
 
 $color-overlay: rgba(36, 33, 69, 0.55);
 // Figma game-card overlay: black, 0% -> 40% at 17% -> 85% from 46% down.

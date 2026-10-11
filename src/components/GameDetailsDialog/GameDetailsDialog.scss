@@ -344,17 +344,14 @@
       font-size: t.$font-size-label-medium;
     }
 
-    &--me,
-    &--2 {
+    &--me {
       background-color: t.$color-primary;
     }
 
-    &--1 {
-      background-color: t.$color-avatar-3;
-    }
-
-    &--3 {
-      background-color: t.$color-avatar-1;
+    @each $index, $color in t.$avatar-random-colors {
+      &--color-#{$index} {
+        background-color: $color;
+      }
     }
   }
 
@@ -378,6 +375,31 @@
     &::placeholder {
       color: t.$color-text-placeholder;
     }
+
+    &:disabled {
+      background-color: t.$color-disabled-surface;
+      cursor: not-allowed;
+    }
+  }
+
+  &__comment-error {
+    min-height: t.$size-2;
+    margin-top: t.$size-05;
+    padding-left: calc(#{t.$avatar-size} + #{t.$size-2});
+    font-size: t.$font-size-label-medium;
+    color: t.$color-error;
+  }
+
+  &__comment-hint {
+    padding-left: calc(#{t.$avatar-size} + #{t.$size-2});
+    font-size: t.$font-size-label-medium;
+    color: t.$color-on-bg;
+  }
+
+  &__login {
+    font-weight: t.$font-weight-bold;
+    color: t.$color-tertiary;
+    text-decoration: underline;
   }
 
   &__send {
@@ -396,6 +418,11 @@
 
     @include bp.hover {
       background-color: t.$color-bg-footer-lowest;
+    }
+
+    &:disabled {
+      opacity: t.$opacity-disabled;
+      cursor: not-allowed;
     }
   }
 
@@ -470,6 +497,11 @@
 
     &--active {
       color: t.$color-like;
+    }
+
+    &:disabled {
+      opacity: t.$opacity-disabled;
+      cursor: progress;
     }
   }
 
