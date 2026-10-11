@@ -1,32 +1,45 @@
 import './AuthDialog.scss';
+import { startSession } from '../../auth/authState';
+import {
+  authErrorMessage,
+  isAuthCancelled,
+  registerWithEmail,
+  signInWithEmail,
+  signInWithGoogle,
+} from '../../auth/firebase';
 import type { AppState } from '../../router/router';
 import { getState, navigate, onStateChange } from '../../router/router';
-import type { AuthMode } from '../../types';
+import type { AuthMode, AuthProfile } from '../../types';
 import { el } from '../../utils/dom';
 import { runAfterTransition } from '../../utils/transition';
+import type { AuthValues } from '../../utils/validation';
 import { Icon } from '../Icon/Icon';
+import { showSnackbar } from '../Snackbar/Snackbar';
 import { AuthForm } from './AuthForm';
 import type { AuthFormHandle } from './AuthForm';
 
-const COPY: Record<AuthMode, { title: string; subtitle: string; tab: string; done: string }> = {
+const COPY: Record<AuthMode, { title: string; subtitle: string; tab: string; pending: string }> = {
   login: {
     title: 'Welcome back',
     subtitle: 'Log in to keep your streak alive.',
     tab: 'Login',
-    done: 'Logged in successfully (demo).',
+    pending: 'Logging you in…',
   },
   register: {
     title: 'Create your account',
     subtitle: 'Join thousands of players in seconds.',
     tab: 'Register',
-    done: 'Account created successfully (demo).',
+    pending: 'Creating your account…',
   },
 };
+
+const GOOGLE_PENDING = 'Waiting for Google…';
 
 const MODES: AuthMode[] = ['login', 'register'];
 
 let currentMode: AuthMode = 'login';
 let switching = false;
+let pending = false;
 
 const Tab = (mode: AuthMode): HTMLButtonElement => {
   const tab = el('button', {
@@ -40,7 +53,7 @@ const Tab = (mode: AuthMode): HTMLButtonElement => {
     text: COPY[mode].tab,
   });
   tab.addEventListener('click', () => {
-    navigate({ auth: mode });
+    if (!pending) navigate({ auth: mode });
   });
   return tab;
 };
@@ -57,9 +70,19 @@ const tabs: Record<AuthMode, HTMLButtonElement> = {
   register: Tab('register'),
 };
 const forms: Record<AuthMode, AuthFormHandle> = {
-  login: AuthForm({ mode: 'login', onSubmit: showStatus, onSwitch: requestAuthMode }),
-  register: AuthForm({ mode: 'register', onSubmit: showStatus, onSwitch: requestAuthMode }),
+  login: AuthForm({ mode: 'login', onSubmit: submitCredentials, onSwitch: requestAuthMode }),
+  register: AuthForm({
+    mode: 'register',
+    onSubmit: submitCredentials,
+    onSwitch: requestAuthMode,
+  }),
 };
+
+const googleButton = el('button', {
+  className: 'btn btn--outlined btn--large btn--block auth-dialog__google',
+  attrs: { type: 'button' },
+  children: [Icon('google', 'icon--small'), el('span', { text: 'Continue with Google' })],
+});
 
 const body = el('div', {
   className: 'auth-dialog__body',
@@ -86,6 +109,8 @@ const panel = el('div', {
       children: [tabs.login, tabs.register],
     }),
     body,
+    el('p', { className: 'auth-dialog__divider', children: [el('span', { text: 'or' })] }),
+    googleButton,
     status,
   ],
 });
@@ -113,7 +138,6 @@ function applyMode(mode: AuthMode): void {
 function requestMode(mode: AuthMode): void {
   if (mode === currentMode || switching) return;
   switching = true;
-  status.textContent = '';
   runAfterTransition(body, () => {
     for (const other of MODES) forms[other].reset();
     applyMode(mode);
@@ -124,17 +148,64 @@ function requestMode(mode: AuthMode): void {
   body.classList.add('is-switching');
 }
 
-function showStatus(mode: AuthMode): void {
-  status.textContent = COPY[mode].done;
+function setPending(next: boolean, message = ''): void {
+  pending = next;
+  status.replaceChildren(
+    ...(next ? [el('span', { className: 'spinner', attrs: { 'aria-hidden': 'true' } })] : []),
+    message
+  );
+  panel.setAttribute('aria-busy', String(next));
+  dialog.classList.toggle('is-pending', next);
+  for (const mode of MODES) {
+    forms[mode].setLocked(next);
+    tabs[mode].disabled = next;
+  }
+  googleButton.disabled = next;
+  closeButton.disabled = next;
+}
+
+function finishAuthentication(profile: AuthProfile): void {
+  const session = startSession(profile);
+  setPending(false);
+  showSnackbar(`Welcome, ${session.displayName || session.email}!`, 'success');
+  closeAuthDialog();
+}
+
+function failAuthentication(error: unknown): void {
+  setPending(false);
+  showSnackbar(authErrorMessage(error), isAuthCancelled(error) ? 'info' : 'error');
+  if (getState().auth === null) hideDialog();
+}
+
+async function authenticate(message: string, run: () => Promise<AuthProfile>): Promise<void> {
+  if (pending) return;
+  setPending(true, message);
+  let profile: AuthProfile;
+  try {
+    profile = await run();
+  } catch (error) {
+    failAuthentication(error);
+    return;
+  }
+  finishAuthentication(profile);
+}
+
+function submitCredentials(mode: AuthMode, values: AuthValues): void {
+  const email = values.email ?? '';
+  const password = values.password ?? '';
+  void authenticate(COPY[mode].pending, () =>
+    mode === 'register'
+      ? registerWithEmail(values.username ?? '', email, password)
+      : signInWithEmail(email, password)
+  );
 }
 
 function requestAuthMode(mode: AuthMode): void {
-  navigate({ auth: mode });
+  if (!pending) navigate({ auth: mode });
 }
 
 function showDialog(mode: AuthMode): void {
   applyMode(mode);
-  status.textContent = '';
   if (!dialog.open) {
     dialog.showModal();
     requestAnimationFrame(() => {
@@ -146,7 +217,7 @@ function showDialog(mode: AuthMode): void {
 }
 
 function hideDialog(): void {
-  if (!dialog.open) return;
+  if (!dialog.open || pending) return;
   dialog.classList.remove('is-open');
   document.body.classList.remove('is-locked');
   runAfterTransition(panel, () => {
@@ -160,7 +231,7 @@ function syncDialog(next: AppState, previous: AppState): void {
   if (next.auth === previous.auth) return;
   if (next.auth === null) {
     hideDialog();
-  } else if (previous.auth === null) {
+  } else if (previous.auth === null || !dialog.open) {
     showDialog(next.auth);
   } else {
     requestMode(next.auth);
@@ -172,9 +243,13 @@ export function openAuthDialog(mode: AuthMode = 'login'): void {
 }
 
 export function closeAuthDialog(): void {
+  if (pending) return;
   navigate({ auth: null });
 }
 
+googleButton.addEventListener('click', () => {
+  void authenticate(GOOGLE_PENDING, signInWithGoogle);
+});
 closeButton.addEventListener('click', closeAuthDialog);
 dialog.addEventListener('click', (event) => {
   if (event.target === event.currentTarget) closeAuthDialog();

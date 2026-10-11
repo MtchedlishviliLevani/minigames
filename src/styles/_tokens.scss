@@ -233,3 +233,8 @@ $snackbar-max-width: 400px;
 $snackbar-offset: $size-3;
 $snackbar-enter-offset: $size-2;
 $z-snackbar: 1100;
+
+// Loading indicator
+$spinner-size: $icon-size-small;
+$spinner-width: $border-width-thick;
+$spinner-duration: 800ms;

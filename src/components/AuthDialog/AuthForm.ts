@@ -162,6 +162,16 @@ export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): AuthFormH
     ],
   });
 
+  const element = el('div', {
+    className: 'auth-form-panel',
+    attrs: {
+      id: `auth-panel-${mode}`,
+      role: 'tabpanel',
+      'aria-labelledby': `auth-tab-${mode}`,
+    },
+    children: [form],
+  });
+
   const input = (field: AuthField): HTMLInputElement | null =>
     form.querySelector<HTMLInputElement>(`[name="${field}"]`);
 
@@ -194,6 +204,7 @@ export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): AuthFormH
   const handleChange = (event: Event): void => {
     const target = event.target;
     if (!(target instanceof HTMLInputElement) || !isAuthField(mode, target.name)) return;
+    if (element.hidden) return;
     const field = target.name;
     if (event.type === 'input' && target.value === '' && !touched.has(field)) {
       updateSubmit();
@@ -223,16 +234,6 @@ export const AuthForm = ({ mode, onSubmit, onSwitch }: AuthFormProps): AuthFormH
       return;
     }
     onSubmit(mode, current);
-  });
-
-  const element = el('div', {
-    className: 'auth-form-panel',
-    attrs: {
-      id: `auth-panel-${mode}`,
-      role: 'tabpanel',
-      'aria-labelledby': `auth-tab-${mode}`,
-    },
-    children: [form],
   });
 
   return {
