@@ -1,0 +1,59 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/breakpoints' as bp;
+
+.user-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: t.$avatar-size;
+  height: t.$avatar-size;
+  overflow: hidden;
+  border: t.$border-width-thick solid t.$color-on-primary;
+  border-radius: t.$corner-full;
+  background-color: t.$color-primary;
+  font-size: t.$font-size-label-large;
+  font-weight: t.$font-weight-bold;
+  color: t.$color-on-primary;
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: t.$size-2;
+  min-width: 0;
+
+  &__identity {
+    display: flex;
+    align-items: center;
+    gap: t.$size-1;
+    min-width: 0;
+  }
+
+  &__name {
+    overflow: hidden;
+    max-width: t.$profile-name-max-width;
+    font-size: t.$font-size-label-large;
+    font-weight: t.$font-weight-bold;
+    color: t.$color-on-primary;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &--menu {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  &--menu &__name {
+    max-width: none;
+    font-size: t.$font-size-body-medium;
+    color: t.$color-white;
+  }
+}
