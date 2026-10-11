@@ -10,6 +10,7 @@ import chevronRight from '../../assets/icons/chevron-right.svg?raw';
 import check from '../../assets/icons/check.svg?raw';
 import close from '../../assets/icons/close.svg?raw';
 import code from '../../assets/icons/code.svg?raw';
+import google from '../../assets/icons/google.svg?raw';
 import heart from '../../assets/icons/heart.svg?raw';
 import lock from '../../assets/icons/lock.svg?raw';
 import mail from '../../assets/icons/mail.svg?raw';
@@ -38,6 +39,7 @@ const ICONS = {
   lock,
   user,
   check,
+  google,
   'arrow-back': arrowBack,
   'arrow-forward': arrowForward,
   'arrow-drop-down': arrowDropDown,
