@@ -1,4 +1,6 @@
 import './Header.scss';
+import { getSession, onSessionChange } from '../../auth/authState';
+import type { AppSession } from '../../auth/session';
 import { NAV_LINKS } from '../../data/navigation';
 import { getRoute, onRouteChange } from '../../router/router';
 import type { AuthMode } from '../../types';
@@ -8,6 +10,7 @@ import { openAuthDialog } from '../AuthDialog/AuthDialog';
 import { Icon } from '../Icon/Icon';
 import { Logo } from '../Logo/Logo';
 import { toggleMenu } from '../MobileMenu/MobileMenu';
+import { UserProfile } from '../UserProfile/UserProfile';
 
 let burger: HTMLButtonElement | null = null;
 
@@ -75,13 +78,21 @@ export const Header = (): HTMLElement => {
     ],
   });
 
-  const actions = el('div', {
-    className: 'header__actions',
-    children: [
-      AuthButton('login', 'Log In', 'btn--outlined header__login'),
-      AuthButton('register', 'Sign Up', 'btn--filled header__signup'),
-    ],
-  });
+  const actions = el('div', { className: 'header__actions' });
+
+  const renderActions = (session: AppSession | null): void => {
+    actions.replaceChildren(
+      ...(session === null
+        ? [
+            AuthButton('login', 'Log In', 'btn--outlined header__login'),
+            AuthButton('register', 'Sign Up', 'btn--filled header__signup'),
+          ]
+        : [UserProfile(session, 'header')])
+    );
+  };
+
+  renderActions(getSession());
+  onSessionChange(renderActions);
 
   return el('header', {
     className: 'header',

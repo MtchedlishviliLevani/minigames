@@ -1,4 +1,6 @@
 import './MobileMenu.scss';
+import { getSession, onSessionChange } from '../../auth/authState';
+import type { AppSession } from '../../auth/session';
 import { NAV_LINKS } from '../../data/navigation';
 import { getRoute, onRouteChange } from '../../router/router';
 import type { AuthMode } from '../../types';
@@ -9,6 +11,7 @@ import { openAuthDialog } from '../AuthDialog/AuthDialog';
 import { setBurgerOpen } from '../Header/Header';
 import { Icon } from '../Icon/Icon';
 import { Logo } from '../Logo/Logo';
+import { UserProfile } from '../UserProfile/UserProfile';
 
 const DESKTOP_QUERY = '(min-width: 1024px)';
 
@@ -88,6 +91,22 @@ export const MobileMenu = (): HTMLElement => {
   });
   closeButton.addEventListener('click', closeMenu);
 
+  const actions = el('div', { className: 'mobile-menu__actions' });
+
+  const renderActions = (session: AppSession | null): void => {
+    actions.replaceChildren(
+      ...(session === null
+        ? [
+            AuthButton('login', 'Log In', 'btn--inverse'),
+            AuthButton('register', 'Sign Up', 'btn--filled'),
+          ]
+        : [UserProfile(session, 'menu', closeMenu)])
+    );
+  };
+
+  renderActions(getSession());
+  onSessionChange(renderActions);
+
   menu = el('div', {
     className: 'mobile-menu',
     attrs: { id: 'mobile-menu', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Menu' },
@@ -103,13 +122,7 @@ export const MobileMenu = (): HTMLElement => {
           }),
         ],
       }),
-      el('div', {
-        className: 'mobile-menu__actions',
-        children: [
-          AuthButton('login', 'Log In', 'btn--inverse'),
-          AuthButton('register', 'Sign Up', 'btn--filled'),
-        ],
-      }),
+      actions,
     ],
   });
   menu.hidden = true;
